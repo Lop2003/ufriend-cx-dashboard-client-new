@@ -8,6 +8,7 @@ if (!BASE_URL) {
 
 export async function request<T = any>(url: string, options: RequestInit = {}): Promise<T> {
   const res = await fetch(`${BASE_URL}${url}`, {
+    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     ...options,
   });
