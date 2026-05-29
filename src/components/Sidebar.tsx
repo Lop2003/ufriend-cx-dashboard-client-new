@@ -16,7 +16,8 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-} from "@/components/ui/sidebar";
+} from "@/components/animate-ui/components/radix/sidebar";
+import { Highlight } from '@/components/animate-ui/primitives/effects/highlight';
 import { PATHS } from '../routes/paths';
 import brandIcon from '../assets/Icon.png';
 import type { AuthUser } from '@/services/authService';
@@ -49,8 +50,7 @@ export default function Sidebar({ isCollapsed, onToggleCollapse, isMobileOpen, o
 
   return (
     <div
-      className={`relative flex h-full w-full flex-col justify-between overflow-hidden bg-gradient-to-b from-[#002D8B]/95 via-[#0038A5]/90 to-[#002D8B]/95 backdrop-blur-2xl text-slate-200 transition-all duration-300 ease-in-out ${isMobileOpen ? 'rounded-none' : 'rounded-[24px]'
-        } border border-white/10 shadow-2xl`}
+      className={`relative flex h-full w-full flex-col justify-between overflow-hidden bg-gradient-to-b from-[#002D8B]/95 via-[#0038A5]/90 to-[#002D8B]/95 backdrop-blur-2xl text-slate-200 transition-all duration-300 ease-in-out rounded-none border-r border-white/10`}
     >
       {/* Saturated Cosmic background glows */}
       <motion.div
@@ -158,10 +158,11 @@ export default function Sidebar({ isCollapsed, onToggleCollapse, isMobileOpen, o
 
         {/* Navigation items using Shadcn UI Sidebar components */}
         <nav className="px-3 py-4">
-          <SidebarMenu
-            className="space-y-1.5"
-            onMouseLeave={() => setHoveredPath(null)}
-          >
+          <Highlight controlledItems>
+            <SidebarMenu
+              className="space-y-1.5"
+              onMouseLeave={() => setHoveredPath(null)}
+            >
             {NAV_ITEMS.map((item) => {
               const isActive = location.pathname === item.path;
               const Icon = item.icon;
@@ -246,7 +247,8 @@ export default function Sidebar({ isCollapsed, onToggleCollapse, isMobileOpen, o
                 </SidebarMenuItem>
               );
             })}
-          </SidebarMenu>
+            </SidebarMenu>
+          </Highlight>
         </nav>
       </div>
 
