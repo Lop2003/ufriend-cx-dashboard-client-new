@@ -1,9 +1,10 @@
 import { request } from "./apiClient";
+import type { Feedback, FetchFeedbacksParams, FeedbackStats } from "../types";
 
 /**
  * READ — ดึงรายการ feedbacks พร้อม filter (branch, category, rating)
  */
-export async function fetchFeedbacks(params: any = {}) {
+export async function fetchFeedbacks(params: FetchFeedbacksParams = {}): Promise<Feedback[]> {
   const query = new URLSearchParams();
   if (params.branch) query.append("branch", params.branch);
   if (params.category) query.append("category", params.category);
@@ -11,15 +12,16 @@ export async function fetchFeedbacks(params: any = {}) {
   if (params.page) query.append("page", params.page);
   if (params.limit) query.append("limit", params.limit);
   const qs = query.toString();
-  return request(`/api/feedbacks${qs ? `?${qs}` : ""}`);
+  return request<Feedback[]>(`/api/feedbacks${qs ? `?${qs}` : ""}`);
 }
 
 /**
  * READ — ดึงข้อมูลสถิติ feedbacks สำหรับวาดกราฟ (avg_rating, sentiments, weekly_csat)
  */
-export async function fetchFeedbackStats(branch: string) {
+export async function fetchFeedbackStats(branch: string): Promise<FeedbackStats> {
   const url = branch
     ? `/api/feedbacks/stats?branch=${encodeURIComponent(branch)}`
     : '/api/feedbacks/stats';
-  return request(url);
+  return request<FeedbackStats>(url);
 }
+

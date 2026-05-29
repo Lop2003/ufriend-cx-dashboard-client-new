@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { fetchFeedbacks } from '../services/feedbackService';
+import type { Feedback } from '../types';
 
 /**
  * useFeedbacks — fetch feedbacks จาก API พร้อม filter ตาม branch (server-side)
@@ -9,7 +10,7 @@ import { fetchFeedbacks } from '../services/feedbackService';
 export function useFeedbacks(options: { branch?: string } = {}) {
   const { branch = '' } = options;
 
-  const [feedbacks, setFeedbacks] = useState<any[]>([]);
+  const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 

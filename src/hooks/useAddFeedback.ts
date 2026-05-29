@@ -4,8 +4,9 @@ import { createFeedback } from '../services/feedbackMutations';
 import { fetchCustomerDetail } from '../services/customerService';
 import { useToast } from '../components/Toast';
 import { PATHS } from '../routes/paths';
+import type { Customer, UseAddFormOptions } from '../types';
 
-export function useAddFeedback(options: any = {}) {
+export function useAddFeedback(options: UseAddFormOptions = {}) {
   const { customers = [] } = options;
   const navigate = useNavigate();
   const location = useLocation();
@@ -23,7 +24,7 @@ export function useAddFeedback(options: any = {}) {
   const [category, setCategory] = useState('service');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedCust, setSelectedCust] = useState<any>(null);
+  const [selectedCust, setSelectedCust] = useState<Customer | null>(null);
 
   useEffect(() => {
     if (routerCustomerId) {
@@ -37,7 +38,7 @@ export function useAddFeedback(options: any = {}) {
       setSelectedCust(null);
       return;
     }
-    const found = customers.find((c: any) => c.id === customerId);
+    const found = customers.find((c: Customer) => c.id === customerId);
     if (found) {
       setSelectedCust(found);
     } else {

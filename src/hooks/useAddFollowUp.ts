@@ -4,8 +4,9 @@ import { createFollowUp } from '../services/followUpMutations';
 import { fetchCustomerDetail } from '../services/customerService';
 import { useToast } from '../components/Toast';
 import { PATHS } from '../routes/paths';
+import type { Customer, UseAddFormOptions } from '../types';
 
-export function useAddFollowUp(options: any = {}) {
+export function useAddFollowUp(options: UseAddFormOptions = {}) {
   const { customers = [] } = options;
   const navigate = useNavigate();
   const location = useLocation();
@@ -21,7 +22,7 @@ export function useAddFollowUp(options: any = {}) {
   const [note, setNote] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedCust, setSelectedCust] = useState<any>(null);
+  const [selectedCust, setSelectedCust] = useState<Customer | null>(null);
 
   useEffect(() => {
     if (routerCustomerId) {
@@ -35,7 +36,7 @@ export function useAddFollowUp(options: any = {}) {
       setSelectedCust(null);
       return;
     }
-    const found = customers.find((c: any) => c.id === customerId);
+    const found = customers.find((c: Customer) => c.id === customerId);
     if (found) {
       setSelectedCust(found);
     } else {

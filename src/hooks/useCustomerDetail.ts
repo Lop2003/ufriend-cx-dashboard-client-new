@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { fetchCustomerDetail } from '../services/customerService';
+import type { Customer } from '../types';
 
 export function useCustomerDetail(selectedCustomerId: string | null) {
-  const [customer, setCustomer] = useState<any>(null);
+  const [customer, setCustomer] = useState<Customer | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 

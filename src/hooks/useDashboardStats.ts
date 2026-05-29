@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { fetchSummary, fetchBranchStats } from "../services/statsService";
 import { fetchFeedbackStats } from "../services/feedbackService";
+import type { SummaryStats, BranchStat, FeedbackStats } from "../types";
 
 /**
  * useDashboardStats — fetch summary + branch stats + feedback stats สำหรับ dashboard
@@ -8,9 +9,9 @@ import { fetchFeedbackStats } from "../services/feedbackService";
 export function useDashboardStats(options: { branch?: string } = {}) {
   const { branch = "" } = options;
 
-  const [apiSummary, setApiSummary] = useState<any>(null);
-  const [branchStats, setBranchStats] = useState<any[]>([]);
-  const [apiFeedbackStats, setApiFeedbackStats] = useState<any>(null);
+  const [apiSummary, setApiSummary] = useState<SummaryStats | null>(null);
+  const [branchStats, setBranchStats] = useState<BranchStat[]>([]);
+  const [apiFeedbackStats, setApiFeedbackStats] = useState<FeedbackStats | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 

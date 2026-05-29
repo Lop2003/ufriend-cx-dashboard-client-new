@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { fetchBranchStats } from '../services/statsService';
+import type { BranchStat } from '../types';
 
 const BRANCH_FALLBACK = [
   'วงเวียนใหญ่',
@@ -17,7 +18,7 @@ const BRANCH_FALLBACK = [
  * ใช้ได้กับทุก page ที่ต้องการ branch list (customers, dashboard, forms)
  */
 export function useBranches() {
-  const [branchStats, setBranchStats] = useState<any[]>([]);
+  const [branchStats, setBranchStats] = useState<BranchStat[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 

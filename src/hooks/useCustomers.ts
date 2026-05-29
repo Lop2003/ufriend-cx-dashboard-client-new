@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import { fetchCustomers } from "../services/customerService";
+import type { Customer, UseCustomersOptions, PaginatedCustomers } from "../types";
 
 /**
  * useCustomers — fetch รายการลูกค้าจาก API พร้อม server-side pagination
  * ใช้ระบบ Active flag เพื่อแก้ไขปัญหา Async Race Condition เสมอ
  */
-export function useCustomers(options: any = {}) {
+export function useCustomers(options: UseCustomersOptions = {}) {
   const {
     search = "",
     branch = "",
@@ -16,7 +17,7 @@ export function useCustomers(options: any = {}) {
     limit = 10,
   } = options;
 
-  const [customers, setCustomers] = useState<any[]>([]);
+  const [customers, setCustomers] = useState<Customer[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [currentPage, setCurrentPage] = useState<number>(page);
@@ -29,7 +30,7 @@ export function useCustomers(options: any = {}) {
     setIsLoading(true);
     setError(null);
     try {
-      const data = await fetchCustomers({
+      const data: PaginatedCustomers = await fetchCustomers({
         search,
         branch,
         status,
@@ -65,7 +66,7 @@ export function useCustomers(options: any = {}) {
       setIsLoading(true);
       setError(null);
       try {
-        const data = await fetchCustomers({
+        const data: PaginatedCustomers = await fetchCustomers({
           search,
           branch,
           status,
@@ -116,3 +117,4 @@ export function useCustomers(options: any = {}) {
 }
 
 export default useCustomers;
+
