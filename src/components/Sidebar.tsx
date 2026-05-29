@@ -8,7 +8,8 @@ import {
   Clock,
   ChevronLeft,
   X,
-  User
+  User,
+  LogOut
 } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import {
@@ -18,12 +19,15 @@ import {
 } from "@/components/ui/sidebar";
 import { PATHS } from '../routes/paths';
 import brandIcon from '../assets/Icon.png';
+import type { AuthUser } from '@/services/authService';
 
 interface SidebarProps {
   isCollapsed: boolean;
   onToggleCollapse: () => void;
   isMobileOpen: boolean;
   onCloseMobile?: () => void;
+  user: AuthUser | null;
+  onLogout: () => void;
 }
 
 const NAV_ITEMS = [
@@ -33,7 +37,7 @@ const NAV_ITEMS = [
   { label: 'บันทึกการติดตาม', path: PATHS.FOLLOW_UP, icon: Clock },
 ];
 
-export default function Sidebar({ isCollapsed, onToggleCollapse, isMobileOpen, onCloseMobile }: SidebarProps) {
+export default function Sidebar({ isCollapsed, onToggleCollapse, isMobileOpen, onCloseMobile, user, onLogout }: SidebarProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const [hoveredPath, setHoveredPath] = useState<string | null>(null);
@@ -248,32 +252,76 @@ export default function Sidebar({ isCollapsed, onToggleCollapse, isMobileOpen, o
 
       {/* Footer / User Profile section */}
       <div className="relative z-10 border-t border-white/5 bg-slate-950/40 p-4 backdrop-blur-md">
-        <motion.div
-          layout="position"
-          className="flex items-center gap-3 overflow-hidden"
-        >
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 shadow-md">
-            <User className="h-4 w-4 text-slate-300" />
-          </div>
-          <AnimatePresence mode="wait">
-            {!isCollapsed && (
-              <motion.div
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -10 }}
-                transition={{ duration: 0.15 }}
-                className="flex flex-col overflow-hidden text-left"
-              >
-                <span className="text-[12px] font-bold text-white truncate leading-tight">
-                  ผู้ดูแลระบบ uFriend
-                </span>
-                <span className="text-[10px] font-semibold text-slate-400/80 truncate mt-0.5">
-                  CX Operator
-                </span>
-              </motion.div>
+        <div className="flex items-center justify-between gap-2 overflow-hidden">
+          <motion.div
+            layout="position"
+            className="flex items-center gap-3 overflow-hidden"
+          >
+            {user?.avatarUrl ? (
+              <img
+                src={user.avatarUrl}
+                alt={user.name}
+                className="h-8 w-8 shrink-0 rounded-full object-cover border border-white/20"
+              />
+            ) : (
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 shadow-md">
+                <User className="h-4 w-4 text-slate-300" />
+              </div>
             )}
-          </AnimatePresence>
-        </motion.div>
+            <AnimatePresence mode="wait">
+              {!isCollapsed && (
+                <motion.div
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -10 }}
+                  transition={{ duration: 0.15 }}
+                  className="flex flex-col overflow-hidden text-left"
+                >
+                  <span className="text-[12px] font-bold text-white truncate leading-tight">
+                    {user?.name || "ผู้ดูแลระบบ uFriend"}
+                  </span>
+                  <span className="text-[10px] font-semibold text-slate-400/80 truncate mt-0.5">
+                    {user?.email || "CX Operator"}
+                  </span>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+
+          {!isCollapsed && (
+            <Tooltip delayDuration={300}>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={onLogout}
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-slate-300 transition-all hover:bg-rose-500/20 hover:text-rose-400 hover:border-rose-500/30 cursor-pointer"
+                >
+                  <LogOut className="h-4 w-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="top" align="end">
+                ออกจากระบบ
+              </TooltipContent>
+            </Tooltip>
+          )}
+        </div>
+
+        {isCollapsed && (
+          <div className="mt-3 flex justify-center">
+            <Tooltip delayDuration={300}>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={onLogout}
+                  className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-slate-300 transition-all hover:bg-rose-500/20 hover:text-rose-400 hover:border-rose-500/30 cursor-pointer"
+                >
+                  <LogOut className="h-4 w-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                ออกจากระบบ
+              </TooltipContent>
+            </Tooltip>
+          </div>
+        )}
       </div>
     </div>
   );

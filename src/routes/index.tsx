@@ -14,7 +14,7 @@ const LoginPage       = lazy(() => import('../pages/login'));
 
 /** Layout ที่ต้องมี session — ไม่มีจะ redirect ไป /login */
 function ProtectedLayout() {
-  const { isLoading, isAuthenticated } = useAuth({ requireAuth: true });
+  const { isLoading, isAuthenticated, user, logout } = useAuth({ requireAuth: true });
 
   if (isLoading) {
     return <PageLoader />;
@@ -25,7 +25,7 @@ function ProtectedLayout() {
   }
 
   return (
-    <MainLayout>
+    <MainLayout user={user} onLogout={logout}>
       <Suspense fallback={<PageLoader />}>
         <Outlet />
       </Suspense>

@@ -2,15 +2,18 @@ import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, User as UserIcon } from 'lucide-react';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import Sidebar from './Sidebar';
 import { PATHS } from '../routes/paths';
 import { SidebarProvider } from '@/components/ui/sidebar';
+import type { AuthUser } from '@/services/authService';
 
 interface MainLayoutProps {
   children: React.ReactNode;
+  user: AuthUser | null;
+  onLogout: () => void;
 }
 
 const PAGE_LABELS: Record<string, { breadcrumb: string | null; label: string }> = {
@@ -20,7 +23,7 @@ const PAGE_LABELS: Record<string, { breadcrumb: string | null; label: string }> 
   [PATHS.FOLLOW_UP]:    { breadcrumb: 'บันทึกการติดตาม', label: 'add-followup' },
 };
 
-export default function MainLayout({ children }: MainLayoutProps) {
+export default function MainLayout({ children, user, onLogout }: MainLayoutProps) {
   const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -34,6 +37,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
       {/* Saturated Neon Accent Orbs (Floating Ambient Glows) */}
       <motion.div
         animate={{
+          scale: [1, 1.15, 1],
+          opacity: [0.12, 0.2, 0.12],
           x: [0, 40, -20, 0],
           y: [0, -30, 20, 0],
         }}
@@ -46,6 +51,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
       />
       <motion.div
         animate={{
+          scale: [1, 1.2, 1],
+          opacity: [0.1, 0.16, 0.1],
           x: [0, -30, 40, 0],
           y: [0, 20, -30, 0],
         }}
@@ -66,6 +73,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
           isCollapsed={isCollapsed}
           onToggleCollapse={() => setIsCollapsed((v) => !v)}
           isMobileOpen={false}
+          user={user}
+          onLogout={onLogout}
         />
       </div>
 
@@ -94,6 +103,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 onToggleCollapse={() => {}}
                 isMobileOpen={true}
                 onCloseMobile={() => setMobileOpen(false)}
+                user={user}
+                onLogout={onLogout}
               />
             </motion.div>
           </>
@@ -133,10 +144,10 @@ export default function MainLayout({ children }: MainLayoutProps) {
             <div className="flex items-center gap-3">
               <div className="hidden sm:flex flex-col text-right">
                 <span className="text-[11.5px] font-extrabold text-slate-800 leading-tight">
-                  เจ้าหน้าที่บริการลูกค้า uFriend
+                  {user?.name || "เจ้าหน้าที่บริการลูกค้า uFriend"}
                 </span>
                 <span className="text-[9.5px] font-bold uppercase tracking-wider text-slate-400 mt-0.5">
-                  ฝ่ายบริหารประสบการณ์ลูกค้า
+                  {user?.email || "ฝ่ายบริหารประสบการณ์ลูกค้า"}
                 </span>
               </div>
               
@@ -144,6 +155,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 <TooltipTrigger asChild>
                   <div className="group relative cursor-pointer">
                     <Avatar className="h-9 w-9 border-2 border-white shadow-[0_4px_10px_rgba(0,81,186,0.15)] ring-2 ring-transparent transition-all group-hover:scale-105 group-hover:ring-blue-100">
+                      {user?.avatarUrl && (
+                        <AvatarImage src={user.avatarUrl} alt={user.name} className="object-cover" />
+                      )}
                       <AvatarFallback className="bg-[#0051bb] text-white">
                         <UserIcon className="h-4.5 w-4.5" />
                       </AvatarFallback>
@@ -151,7 +165,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   </div>
                 </TooltipTrigger>
                 <TooltipContent side="bottom" align="end">
-                  โปรไฟล์ผู้ใช้
+                  {user?.name || "โปรไฟล์ผู้ใช้"}
                 </TooltipContent>
               </Tooltip>
             </div>
