@@ -1,9 +1,16 @@
 import { useMemo } from 'react';
-import { Store, Smile, TrendingUp } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Smile, TrendingUp } from 'lucide-react';
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip as RechartTooltip, ResponsiveContainer,
-  Cell, PieChart, Pie, Line, CartesianGrid, AreaChart, Area
+  XAxis, YAxis, Cell, PieChart, Pie, Line, CartesianGrid, AreaChart, Area
 } from 'recharts';
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  type ChartConfig,
+} from '@/components/ui/chart';
+import { DashboardChartArea } from './DashboardChartArea';
 
 interface BranchStat {
   branch: string;
@@ -24,27 +31,6 @@ interface DashboardChartsProps {
   setSelectedBranch: (val: string) => void;
 }
 
-interface CustomTooltipProps {
-  active?: boolean;
-  payload?: Array<{ value: number; payload: { name: string } }>;
-  unit?: string;
-}
-
-const CustomTooltip = ({ active, payload, unit = 'ราย' }: CustomTooltipProps) => {
-  if (!active || !payload?.length) return null;
-  return (
-    <div className="rounded-xl border border-white/10 bg-slate-900/90 p-3 shadow-xl backdrop-blur-md text-left">
-      <span className="block text-[9.5px] font-extrabold uppercase tracking-wider text-slate-400">
-        {payload[0].payload.name}
-      </span>
-      <span className="mt-1 block text-[14px] font-extrabold text-cyan-400">
-        {payload[0].value.toLocaleString()}{' '}
-        <span className="text-[11px] font-semibold text-slate-400">{unit}</span>
-      </span>
-    </div>
-  );
-};
-
 export default function DashboardCharts({
   branchStats = [],
   summaryStats = { positiveCount: 0, neutralCount: 0, negativeCount: 0, weeklyCSAT: [4.0, 4.0, 4.0, 4.0] },
@@ -52,7 +38,8 @@ export default function DashboardCharts({
   setSelectedBranch = () => {},
 }: DashboardChartsProps) {
 
-  // 1. Bar chart: customers by branch
+  // 1. Bar chart: customers by branch (No longer used - replaced by DashboardChartArea)
+  /*
   const branchCountsData = useMemo(() => {
     const sortedStats = [...branchStats].sort((a, b) => b.customer_count - a.customer_count);
     return sortedStats.map(stat => ({
@@ -61,8 +48,15 @@ export default function DashboardCharts({
       isSelected: selectedBranch === stat.branch,
     }));
   }, [branchStats, selectedBranch]);
+  */
 
-  // 2. Pie chart: sentiment proportion
+  // 2. Pie chart: sentiment proportion — ChartConfig for shadcn
+  const sentimentConfig = {
+    positive: { label: 'พอใจ (Positive)', color: '#10B981' },
+    neutral: { label: 'เฉยๆ (Neutral)', color: '#F59E0B' },
+    negative: { label: 'ไม่พอใจ (Negative)', color: '#EF4444' },
+  } satisfies ChartConfig
+
   const sentimentData = useMemo(() => {
     const total = (summaryStats.positiveCount + summaryStats.neutralCount + summaryStats.negativeCount) || 1;
     const pos = summaryStats.positiveCount;
@@ -74,14 +68,18 @@ export default function DashboardCharts({
     return {
       percentage: pPos,
       chartData: [
-        { name: 'พอใจ (Positive)', value: pPos, color: '#10B981' },
-        { name: 'เฉยๆ (Neutral)', value: pNeu, color: '#F59E0B' },
-        { name: 'ไม่พอใจ (Negative)', value: pNeg, color: '#EF4444' },
+        { name: 'positive', value: pPos, color: '#10B981', label: 'พอใจ (Positive)' },
+        { name: 'neutral', value: pNeu, color: '#F59E0B', label: 'เฉยๆ (Neutral)' },
+        { name: 'negative', value: pNeg, color: '#EF4444', label: 'ไม่พอใจ (Negative)' },
       ],
     };
   }, [summaryStats]);
 
-  // 3. Line chart: weekly CSAT trend
+  // 3. Line chart: weekly CSAT trend — ChartConfig for shadcn
+  const csatConfig = {
+    score: { label: 'CSAT Score', color: '#0051BA' },
+  } satisfies ChartConfig
+
   const weeklyTrendsData = useMemo(() => {
     const csat = summaryStats.weeklyCSAT || [4.0, 4.0, 4.0, 4.0];
     const thaiMonths = [
@@ -114,11 +112,13 @@ export default function DashboardCharts({
     });
   }, [summaryStats]);
 
+  /*
   const handleBarClick = (data: { name?: string } | undefined) => {
     if (data?.name) {
       setSelectedBranch(selectedBranch === data.name ? '' : data.name);
     }
   };
+  */
 
   const CardHeader = ({ iconBg, iconColor, icon, title, subtitle }: { iconBg: string; iconColor: string; icon: React.ReactNode; title: string; subtitle: string }) => (
     <div className="flex items-center gap-3.5 mb-6 pb-4 border-b border-slate-200/80 text-left">
@@ -137,56 +137,19 @@ export default function DashboardCharts({
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
 
-      {/* ── 1. Bar Chart: ลูกค้าจำแนกรายสาขา ── */}
-      <div className="glass-card rounded-[24px] p-6 shadow-[0_10px_30px_-10px_rgba(0,81,186,0.05)] border border-slate-200/50">
-        <CardHeader
-          iconBg="bg-blue-50" iconColor="text-[#0051BA]"
-          icon={<Store className="h-4.5 w-4.5" />}
-          title="ลูกค้าแยกรายสาขา"
-          subtitle="สัญญาทั้งหมดจำแนกตามพื้นที่สาขาให้บริการ"
-        />
-        <div className="h-[260px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={branchCountsData}
-              margin={{ top: 10, right: 10, left: -25, bottom: 0 }}
-              onClick={(e: any) => e?.activePayload && handleBarClick(e.activePayload[0].payload)}
-            >
-              <defs>
-                <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#0051BA" stopOpacity={0.95} />
-                  <stop offset="100%" stopColor="#ffdb1b" stopOpacity={0.9} />
-                </linearGradient>
-                <linearGradient id="barSelectedGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#ffdb1b" stopOpacity={1} />
-                  <stop offset="100%" stopColor="#0051BA" stopOpacity={0.8} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(226, 232, 240, 0.6)" />
-              <XAxis dataKey="name" axisLine={false} tickLine={false}
-                tick={{ fontSize: 9, fontWeight: 700, fill: '#64748B' }} />
-              <YAxis axisLine={false} tickLine={false}
-                tick={{ fontSize: 9, fontWeight: 600, fill: '#94A3B8' }} allowDecimals={false} />
-              <RechartTooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0,81,186,0.03)' }} />
-              <Bar dataKey="count" radius={[8, 8, 0, 0]} maxBarSize={28} cursor="pointer">
-                {branchCountsData.map((entry, idx) => (
-                  <Cell
-                    key={`cell-${idx}`}
-                    fill={entry.isSelected ? 'url(#barSelectedGradient)' : selectedBranch ? 'rgba(0, 81, 186, 0.15)' : 'url(#barGradient)'}
-                    className="transition-all duration-300"
-                    style={{
-                      filter: entry.isSelected ? 'drop-shadow(0px 4px 10px rgba(0, 81, 186, 0.25))' : 'none'
-                    }}
-                  />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
+      {/* ── 1. Area Chart: ลูกค้าจำแนกรายสาขา (Interactive Area Chart) ── */}
+      <DashboardChartArea
+        branchStats={branchStats}
+        selectedBranch={selectedBranch}
+        setSelectedBranch={setSelectedBranch}
+      />
 
       {/* ── 2. Pie Chart: สัดส่วน Sentiment ── */}
-      <div className="glass-card rounded-[24px] p-6 shadow-[0_10px_30px_-10px_rgba(0,81,186,0.05)] border border-slate-200/50">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="glass-card rounded-[24px] p-6 shadow-[0_10px_30px_-10px_rgba(0,81,186,0.05)] border border-slate-200/50">
         <CardHeader
           iconBg="bg-emerald-50" iconColor="text-emerald-500"
           icon={<Smile className="h-4.5 w-4.5" />}
@@ -195,9 +158,18 @@ export default function DashboardCharts({
         />
         <div className="h-[260px] flex flex-col sm:flex-row items-center justify-center gap-6 px-1">
           <div className="relative h-36 w-36 shrink-0">
-            <ResponsiveContainer width="100%" height="100%">
+            <ChartContainer config={sentimentConfig} className="h-full w-full">
               <PieChart>
-                <RechartTooltip content={<CustomTooltip unit="%" />} />
+                <ChartTooltip
+                  cursor={false}
+                  content={
+                    <ChartTooltipContent
+                      hideLabel
+                      indicator="dot"
+                      className="bg-slate-900/95 text-slate-100 border-none shadow-xl rounded-xl"
+                    />
+                  }
+                />
                 <Pie
                   data={sentimentData.chartData}
                   cx="50%"
@@ -207,13 +179,14 @@ export default function DashboardCharts({
                   paddingAngle={3}
                   dataKey="value"
                   stroke="none"
+                  nameKey="name"
                 >
                   {sentimentData.chartData.map((entry, idx) => (
                     <Cell key={`cell-${idx}`} fill={entry.color} style={{ filter: `drop-shadow(0 2px 4px ${entry.color}20)` }} />
                   ))}
                 </Pie>
               </PieChart>
-            </ResponsiveContainer>
+            </ChartContainer>
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
               <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">เชิงบวก</span>
               <span className="text-[20px] font-extrabold text-emerald-500 leading-none mt-0.5">
@@ -229,17 +202,21 @@ export default function DashboardCharts({
                   style={{ backgroundColor: d.color, boxShadow: `0 0 6px ${d.color}` }}
                 />
                 <div className="flex justify-between flex-1 text-[12px] font-semibold text-slate-600">
-                  <span>{d.name.split(' ')[0]}</span>
+                  <span>{d.label.split(' (')[0]}</span>
                   <span className="font-extrabold text-slate-800">{d.value}%</span>
                 </div>
               </div>
             ))}
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* ── 3. Line Chart: แนวโน้มคะแนน CSAT ── */}
-      <div className="glass-card rounded-[24px] p-6 shadow-[0_10px_30px_-10px_rgba(0,81,186,0.05)] border border-slate-200/50">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="glass-card rounded-[24px] p-6 shadow-[0_10px_30px_-10px_rgba(0,81,186,0.05)] border border-slate-200/50">
         <CardHeader
           iconBg="bg-amber-50" iconColor="text-amber-500"
           icon={<TrendingUp className="h-4.5 w-4.5" />}
@@ -247,7 +224,7 @@ export default function DashboardCharts({
           subtitle="ค่าคะแนนเฉลี่ยความพอใจรายสัปดาห์ (1-5 ดาว)"
         />
         <div className="h-[260px]">
-          <ResponsiveContainer width="100%" height="100%">
+          <ChartContainer config={csatConfig} className="h-[260px] w-full">
             <AreaChart data={weeklyTrendsData} margin={{ top: 15, right: 15, left: -25, bottom: 5 }}>
               <defs>
                 <linearGradient id="areaGlow" x1="0" y1="0" x2="0" y2="1">
@@ -260,36 +237,29 @@ export default function DashboardCharts({
                 tick={{ fontSize: 9, fontWeight: 700, fill: '#64748B' }} />
               <YAxis axisLine={false} tickLine={false} domain={[1, 5]}
                 tick={{ fontSize: 9, fontWeight: 600, fill: '#94A3B8' }} tickCount={5} />
-              <RechartTooltip
-                content={({ active, payload }) => {
-                  if (!active || !payload?.length) return null;
-                  return (
-                    <div className="rounded-xl border border-white/10 bg-slate-900/90 p-3 shadow-xl backdrop-blur-md text-left">
-                      <span className="block text-[9.5px] font-extrabold uppercase tracking-wider text-slate-400">
-                        {payload[0].payload.name}
-                      </span>
-                      <span className="mt-1 block text-[13.5px] font-extrabold text-amber-500">
-                        {Number(payload[0].value).toFixed(2)}{' '}
-                        <span className="text-[11.5px] font-semibold text-amber-500">★</span>
-                      </span>
-                    </div>
-                  );
-                }}
+              <ChartTooltip
+                cursor={false}
+                content={
+                  <ChartTooltipContent
+                    indicator="dot"
+                    className="bg-slate-900/95 text-slate-100 border-none shadow-xl rounded-xl"
+                  />
+                }
               />
               <Area type="monotone" dataKey="score" stroke="none" fill="url(#areaGlow)" />
               <Line
                 type="monotone"
                 dataKey="score"
-                stroke="#0051BA"
+                stroke="var(--color-score)"
                 strokeWidth={4.5}
-                dot={{ r: 5, strokeWidth: 2, fill: '#ffffff', stroke: '#0051BA' }}
+                dot={{ r: 5, strokeWidth: 2, fill: '#ffffff', stroke: 'var(--color-score)' }}
                 activeDot={{ r: 7, strokeWidth: 2.5, fill: '#ffffff', stroke: '#6366F1' }}
                 style={{ filter: 'drop-shadow(0px 4px 6px rgba(0, 81, 186, 0.2))' }}
               />
             </AreaChart>
-          </ResponsiveContainer>
+          </ChartContainer>
         </div>
-      </div>
+      </motion.div>
 
     </div>
   );
