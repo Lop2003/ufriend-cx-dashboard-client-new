@@ -61,39 +61,59 @@
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.708 0 0);
   }
+
+  /* ═══════════════════════════════════════════════════════
+     DARK THEME — uFriend Brand-Aware Deep Navy Palette
+     Uses deep navy-blue tones instead of pure neutral gray
+     ═══════════════════════════════════════════════════════ */
   .dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.922 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.556 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.556 0 0);
+    --background: oklch(0.13 0.02 255);
+    --foreground: oklch(0.95 0.005 240);
+
+    --card: oklch(0.17 0.02 255 / 80%);
+    --card-foreground: oklch(0.95 0.005 240);
+
+    --popover: oklch(0.17 0.025 255);
+    --popover-foreground: oklch(0.95 0.005 240);
+
+    /* uFriend Primary Blue — brighter for dark backgrounds */
+    --primary: oklch(0.55 0.22 261);
+    --primary-foreground: oklch(1 0 0);
+
+    /* uFriend Secondary Yellow — slightly muted for dark */
+    --secondary: oklch(0.82 0.18 94);
+    --secondary-foreground: oklch(0.13 0.02 255);
+
+    --muted: oklch(0.22 0.015 255);
+    --muted-foreground: oklch(0.65 0.01 240);
+
+    --accent: oklch(0.22 0.02 255);
+    --accent-foreground: oklch(0.55 0.22 261);
+
+    --destructive: oklch(0.65 0.22 25);
+    --destructive-foreground: oklch(1 0 0);
+
+    --border: oklch(1 0 0 / 8%);
+    --input: oklch(1 0 0 / 10%);
+    --ring: oklch(0.55 0.22 261 / 40%);
+
+    /* Charts - adjusted for dark bg */
+    --chart-1: oklch(0.55 0.22 261);
+    --chart-2: oklch(0.65 0.18 94);
+    --chart-3: oklch(0.60 0.20 150);
+    --chart-4: oklch(0.55 0.15 340);
+    --chart-5: oklch(0.50 0.20 30);
+
+    --sidebar: oklch(0.14 0.025 255);
+    --sidebar-foreground: oklch(0.95 0.005 240);
+    --sidebar-primary: oklch(0.55 0.22 261);
+    --sidebar-primary-foreground: oklch(1 0 0);
+    --sidebar-accent: oklch(0.20 0.02 255);
+    --sidebar-accent-foreground: oklch(0.95 0.005 240);
+    --sidebar-border: oklch(1 0 0 / 8%);
+    --sidebar-ring: oklch(0.55 0.22 261 / 40%);
   }
+
   * {
     @apply border-border;
   }
@@ -106,7 +126,7 @@
 }
 
 @layer utilities {
-  /* Glassmorphism custom card utility with glowing border and subtle shadows */
+  /* Glassmorphism custom card utility — light mode */
   .glass-card {
     background: rgba(255, 255, 255, 0.78);
     backdrop-filter: blur(24px);
@@ -116,15 +136,27 @@
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
+  /* Dark mode glass card — deep, frosted navy surface */
+  .dark .glass-card {
+    background: rgba(15, 23, 55, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.04);
+  }
+
   .glass-sidebar {
     background: rgba(255, 255, 255, 0.6);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     border-right: 1px solid rgba(226, 232, 240, 0.8);
   }
+
+  .dark .glass-sidebar {
+    background: rgba(10, 15, 40, 0.7);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+  }
 }
 
-/* Custom Scrollbars */
+/* Custom Scrollbars — light */
 *::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -140,9 +172,16 @@
   background: #94A3B8;
 }
 
+/* Dark scrollbars */
+.dark *::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+}
+.dark *::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
 body {
   font-family: 'Plus Jakarta Sans', 'Kanit', sans-serif;
-  background-color: #F4F8FC;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -160,6 +199,21 @@ body::before {
   background-image: radial-gradient(rgba(0, 81, 186, 0.05) 1.5px, transparent 1.5px);
   background-size: 24px 24px;
   opacity: 0.95;
+}
+
+/* Dark mode: subtler grid pattern */
+.dark body::before {
+  background-image: radial-gradient(rgba(100, 150, 255, 0.04) 1px, transparent 1px);
+  opacity: 0.6;
+}
+
+/* Smooth color-scheme transition for theme switching */
+html, body, main, header, nav, aside,
+.glass-card, .glass-sidebar {
+  transition: background-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Smooth motion for active route changes */

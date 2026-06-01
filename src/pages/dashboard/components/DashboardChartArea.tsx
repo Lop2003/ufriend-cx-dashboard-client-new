@@ -103,18 +103,18 @@ export function DashboardChartArea({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0 }}
-      className="glass-card rounded-[24px] p-6 shadow-[0_10px_30px_-10px_rgba(0,81,186,0.05)] border border-slate-200/50 text-left"
+      className="glass-card rounded-[24px] p-6 shadow-[0_10px_30px_-10px_rgba(0,81,186,0.05)] dark:shadow-none border border-slate-200/50 dark:border-white/5 text-left"
     >
-      <div className="flex flex-row items-center justify-between gap-4 pb-4 border-b border-slate-200/80 mb-6">
+      <div className="flex flex-row items-center justify-between gap-4 pb-4 border-b border-slate-200/80 dark:border-white/5 mb-6">
         <div className="flex items-center gap-3.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50 text-[#0051BA] shadow-sm">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-950/50 text-[#0051BA] dark:text-blue-400 shadow-sm dark:shadow-none">
             <Store className="h-4.5 w-4.5" />
           </div>
           <div>
-            <span className="block text-[12.5px] font-extrabold uppercase tracking-wider text-slate-800">
+            <span className="block text-[12.5px] font-extrabold uppercase tracking-wider text-slate-800 dark:text-slate-100">
               {title}
             </span>
-            <span className="block text-[11px] font-semibold text-slate-400">
+            <span className="block text-[11px] font-semibold text-slate-400 dark:text-slate-500">
               {subtitle}
             </span>
           </div>
@@ -124,7 +124,7 @@ export function DashboardChartArea({
         {isBranchSelected && (
           <button
             onClick={() => setSelectedBranch("")}
-            className="inline-flex items-center gap-1 rounded-full bg-blue-50 border border-blue-100 hover:bg-blue-100 text-[#0051bb] px-3.5 py-1 text-[11px] font-extrabold tracking-wide transition-all shadow-xs cursor-pointer"
+            className="inline-flex items-center gap-1 rounded-full bg-blue-50 dark:bg-blue-950/50 border border-blue-100 dark:border-blue-900/40 hover:bg-blue-100 dark:hover:bg-blue-900/40 text-[#0051bb] dark:text-blue-400 px-3.5 py-1 text-[11px] font-extrabold tracking-wide transition-all shadow-xs cursor-pointer"
           >
             <span>ดูภาพรวมทุกสาขา</span>
             <X className="h-3 w-3" />
@@ -162,7 +162,7 @@ export function DashboardChartArea({
             <CartesianGrid
               strokeDasharray="3 3"
               vertical={false}
-              stroke="rgba(226, 232, 240, 0.6)"
+              stroke="rgba(148, 163, 184, 0.15)"
             />
             <XAxis
               dataKey="date"

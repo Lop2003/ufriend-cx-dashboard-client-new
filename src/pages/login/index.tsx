@@ -67,7 +67,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="relative min-h-screen w-screen overflow-hidden bg-[#F4F8FC] text-slate-800 antialiased md:grid md:grid-cols-12">
+    <div className="relative min-h-screen w-screen overflow-hidden bg-[#F4F8FC] dark:bg-[#0a0e1a] text-slate-800 dark:text-slate-200 antialiased md:grid md:grid-cols-12">
       {/* Decorative ambient blobs for background depth */}
       <div className="absolute right-[5%] top-[10%] -z-10 h-72 w-72 rounded-full bg-blue-500/10 blur-[80px] pointer-events-none" />
       <div className="absolute right-[15%] bottom-[10%] -z-10 h-80 w-80 rounded-full bg-yellow-400/10 blur-[90px] pointer-events-none" />
@@ -223,14 +223,14 @@ export default function LoginPage() {
       <div className="md:col-span-6 lg:col-span-5 flex flex-col justify-between min-h-screen p-8 lg:p-12 z-10">
         
         {/* Mobile Header (Hidden on Desktop) */}
-        <div className="flex items-center justify-between md:hidden py-2 border-b border-slate-200/50">
+        <div className="flex items-center justify-between md:hidden py-2 border-b border-slate-200/50 dark:border-white/10">
           <div className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#0051bb] shadow-md">
               <img src={brandIcon} alt="uFriend" className="h-5 w-5 object-contain" />
             </div>
-            <span className="text-sm font-extrabold text-slate-900">uFriend CX</span>
+            <span className="text-sm font-extrabold text-slate-900 dark:text-white">uFriend CX</span>
           </div>
-          <span className="text-[10px] font-semibold text-slate-500 bg-slate-100 rounded-full px-2 py-0.5">
+          <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-white/5 rounded-full px-2 py-0.5">
             v2.0.0
           </span>
         </div>
@@ -241,7 +241,7 @@ export default function LoginPage() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
-            className="glass-card relative rounded-3xl border border-white/70 p-7 lg:p-9 shadow-[0_20px_50px_rgba(0,81,186,0.08)] bg-white/75 backdrop-blur-xl text-center"
+            className="glass-card relative rounded-3xl border border-white/70 dark:border-white/5 p-7 lg:p-9 shadow-[0_20px_50px_rgba(0,81,186,0.08)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.3)] bg-white/75 dark:bg-white/[0.03] backdrop-blur-xl text-center"
           >
             {/* Top Logo branding */}
             <div className="flex flex-col items-center gap-3">
@@ -254,7 +254,7 @@ export default function LoginPage() {
                   repeat: Infinity,
                   ease: 'easeInOut',
                 }}
-                className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-white via-slate-50 to-[#F4F8FC] shadow-[0_12px_24px_-8px_rgba(0,81,186,0.25),inset_0_1px_1px_white] border border-slate-200/60"
+                className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-white via-slate-50 to-[#F4F8FC] dark:from-slate-800 dark:via-slate-900 dark:to-[#0c1022] shadow-[0_12px_24px_-8px_rgba(0,81,186,0.25)] dark:shadow-[0_12px_24px_-8px_rgba(0,0,0,0.4)] border border-slate-200/60 dark:border-white/10"
               >
                 <img 
                   src={brandIcon} 
@@ -264,10 +264,10 @@ export default function LoginPage() {
               </motion.div>
               
               <div className="space-y-1">
-                <h3 className="text-2xl font-extrabold tracking-tight text-slate-900">
+                <h3 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">
                   เข้าสู่ระบบ uFriend CX
                 </h3>
-                <p className="text-slate-500 text-xs font-semibold leading-relaxed px-2">
+                <p className="text-slate-500 dark:text-slate-400 text-xs font-semibold leading-relaxed px-2">
                   ยินดีต้อนรับสู่แผงควบคุมระบบจัดการคำติชมและวิเคราะห์ประสบการณ์ลูกค้า uFriend CX
                 </p>
               </div>
@@ -313,7 +313,7 @@ export default function LoginPage() {
                 )}
               </AnimatePresence>
 
-              <div className="flex items-center justify-center gap-2 pt-2 text-[10.5px] font-bold text-slate-400">
+              <div className="flex items-center justify-center gap-2 pt-2 text-[10.5px] font-bold text-slate-400 dark:text-slate-500">
                 <ShieldCheck className="h-4 w-4 text-emerald-500 shrink-0" />
                 <span>เชื่อมต่อระบบยืนยันตัวตนอย่างปลอดภัยผ่าน Lark OAuth 2.0</span>
               </div>
@@ -321,12 +321,12 @@ export default function LoginPage() {
           </motion.div>
 
           {/* Quick instructions / Help */}
-          <div className="rounded-2xl bg-white/40 border border-slate-200/30 p-4 text-left shadow-sm">
+          <div className="rounded-2xl bg-white/40 dark:bg-white/[0.03] border border-slate-200/30 dark:border-white/5 p-4 text-left shadow-sm dark:shadow-none">
             <div className="flex gap-3">
               <Building2 className="h-4.5 w-4.5 text-[#0051bb] shrink-0 mt-0.5" />
               <div className="space-y-0.5">
-                <h4 className="text-xs font-extrabold text-slate-800">ปัญหาในการเข้าสู่ระบบ?</h4>
-                <p className="text-[11px] text-slate-500 leading-normal font-medium">
+                <h4 className="text-xs font-extrabold text-slate-800 dark:text-slate-200">ปัญหาในการเข้าสู่ระบบ?</h4>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-normal font-medium">
                   สิทธิ์การเข้าใช้งานระบบจะได้รับการเปิดใช้งานโดยผู้ดูแลระบบ (Admin) หรือฝ่ายไอที กรุณาเชื่อมต่อผ่าน Lark เพื่อตรวจสอบสิทธิ์ใช้งานของคุณ
                 </p>
               </div>
@@ -335,7 +335,7 @@ export default function LoginPage() {
         </div>
 
         {/* Footer info (Mobile view layout) */}
-        <div className="text-center text-[10.5px] font-bold text-slate-400 md:pt-4">
+        <div className="text-center text-[10.5px] font-bold text-slate-400 dark:text-slate-500 md:pt-4">
           <span className="md:hidden">© {new Date().getFullYear()} uFriend Services. • </span>
           <span>เฉพาะบุคลากรขององค์กรที่ได้รับอนุญาตเท่านั้น</span>
         </div>

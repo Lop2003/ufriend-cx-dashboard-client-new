@@ -11,7 +11,7 @@ export default function DashboardSection({ icon, label, children, rightSlot }: D
   return (
     <div className="w-full">
       <div className="flex items-center justify-between mb-3">
-        <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+        <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
           {icon}
           {label}
         </span>

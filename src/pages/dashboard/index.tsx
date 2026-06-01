@@ -46,7 +46,7 @@ export default function DashboardPage() {
         label="ดัชนีชี้วัดหลัก (KPI & Metrics)"
         rightSlot={
           selectedBranch && !isLoading && (
-            <span className="inline-flex items-center rounded-full bg-blue-50 border border-blue-100 px-3 py-1 text-[10px] font-extrabold text-[#0051bb] tracking-wide">
+            <span className="inline-flex items-center rounded-full bg-blue-50 dark:bg-blue-900/30 border border-blue-100 dark:border-blue-800 px-3 py-1 text-[10px] font-extrabold text-[#0051bb] dark:text-blue-300 tracking-wide">
               ฟิลเตอร์สาขา: {selectedBranch}
             </span>
           )

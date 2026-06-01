@@ -50,7 +50,7 @@ export default function Sidebar({ isCollapsed, onToggleCollapse, isMobileOpen, o
 
   return (
     <div
-      className={`relative flex h-full w-full flex-col justify-between overflow-hidden bg-gradient-to-b from-[#002D8B]/95 via-[#0038A5]/90 to-[#002D8B]/95 backdrop-blur-2xl text-slate-200 transition-all duration-300 ease-in-out rounded-none border-r border-white/10`}
+      className={`relative flex h-full w-full flex-col justify-between overflow-hidden bg-gradient-to-b from-[#002D8B]/95 via-[#0038A5]/90 to-[#002D8B]/95 dark:from-[#080c1c] dark:via-[#0d1228] dark:to-[#080c1c] backdrop-blur-2xl text-slate-200 transition-all duration-300 ease-in-out rounded-none border-r border-white/10 dark:border-white/[0.04]`}
     >
       {/* Saturated Cosmic background glows */}
       <motion.div
@@ -65,7 +65,7 @@ export default function Sidebar({ isCollapsed, onToggleCollapse, isMobileOpen, o
           repeat: Infinity,
           ease: 'easeInOut',
         }}
-        className="absolute -left-10 -top-10 h-36 w-36 rounded-full bg-blue-500/20 blur-[30px] pointer-events-none"
+        className="absolute -left-10 -top-10 h-36 w-36 rounded-full bg-blue-500/20 dark:bg-blue-500/8 blur-[30px] pointer-events-none"
       />
       <motion.div
         animate={{
@@ -80,7 +80,7 @@ export default function Sidebar({ isCollapsed, onToggleCollapse, isMobileOpen, o
           ease: 'easeInOut',
           delay: 2,
         }}
-        className="absolute bottom-[20%] -right-10 h-32 w-32 rounded-full bg-yellow-400/15 blur-[25px] pointer-events-none"
+        className="absolute bottom-[20%] -right-10 h-32 w-32 rounded-full bg-yellow-400/15 dark:bg-yellow-400/5 blur-[25px] pointer-events-none"
       />
 
       {/* Header section */}
@@ -253,7 +253,7 @@ export default function Sidebar({ isCollapsed, onToggleCollapse, isMobileOpen, o
       </div>
 
       {/* Footer / User Profile section */}
-      <div className="relative z-10 border-t border-white/5 bg-slate-950/40 p-4 backdrop-blur-md">
+      <div className="relative z-10 border-t border-white/5 dark:border-white/[0.03] bg-slate-950/40 dark:bg-black/30 p-4 backdrop-blur-md">
         <div className="flex items-center justify-between gap-2 overflow-hidden">
           <motion.div
             layout="position"

@@ -38,18 +38,6 @@ export default function DashboardCharts({
   setSelectedBranch = () => {},
 }: DashboardChartsProps) {
 
-  // 1. Bar chart: customers by branch (No longer used - replaced by DashboardChartArea)
-  /*
-  const branchCountsData = useMemo(() => {
-    const sortedStats = [...branchStats].sort((a, b) => b.customer_count - a.customer_count);
-    return sortedStats.map(stat => ({
-      name: stat.branch,
-      count: stat.customer_count,
-      isSelected: selectedBranch === stat.branch,
-    }));
-  }, [branchStats, selectedBranch]);
-  */
-
   // 2. Pie chart: sentiment proportion — ChartConfig for shadcn
   const sentimentConfig = {
     positive: { label: 'พอใจ (Positive)', color: '#10B981' },
@@ -112,24 +100,16 @@ export default function DashboardCharts({
     });
   }, [summaryStats]);
 
-  /*
-  const handleBarClick = (data: { name?: string } | undefined) => {
-    if (data?.name) {
-      setSelectedBranch(selectedBranch === data.name ? '' : data.name);
-    }
-  };
-  */
-
   const CardHeader = ({ iconBg, iconColor, icon, title, subtitle }: { iconBg: string; iconColor: string; icon: React.ReactNode; title: string; subtitle: string }) => (
-    <div className="flex items-center gap-3.5 mb-6 pb-4 border-b border-slate-200/80 text-left">
-      <div className={`flex h-9 w-9 items-center justify-center rounded-lg ${iconBg} ${iconColor} shadow-md`}>
+    <div className="flex items-center gap-3.5 mb-6 pb-4 border-b border-slate-200/80 dark:border-white/5 text-left">
+      <div className={`flex h-9 w-9 items-center justify-center rounded-lg ${iconBg} ${iconColor} shadow-md dark:shadow-none`}>
         {icon}
       </div>
       <div>
-        <span className="block text-[12.5px] font-extrabold uppercase tracking-wider text-slate-800">
+        <span className="block text-[12.5px] font-extrabold uppercase tracking-wider text-slate-800 dark:text-slate-100">
           {title}
         </span>
-        <span className="block text-[11px] font-semibold text-slate-400">{subtitle}</span>
+        <span className="block text-[11px] font-semibold text-slate-400 dark:text-slate-500">{subtitle}</span>
       </div>
     </div>
   );
@@ -149,9 +129,9 @@ export default function DashboardCharts({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
-        className="glass-card rounded-[24px] p-6 shadow-[0_10px_30px_-10px_rgba(0,81,186,0.05)] border border-slate-200/50">
+        className="glass-card rounded-[24px] p-6 shadow-[0_10px_30px_-10px_rgba(0,81,186,0.05)] dark:shadow-none border border-slate-200/50 dark:border-white/5">
         <CardHeader
-          iconBg="bg-emerald-50" iconColor="text-emerald-500"
+          iconBg="bg-emerald-50 dark:bg-emerald-950/50" iconColor="text-emerald-500 dark:text-emerald-400"
           icon={<Smile className="h-4.5 w-4.5" />}
           title="สัดส่วน Sentiment ความรู้สึก"
           subtitle="ผลลัพธ์การวิเคราะห์อารมณ์ในข้อความติชม"
@@ -188,8 +168,8 @@ export default function DashboardCharts({
               </PieChart>
             </ChartContainer>
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">เชิงบวก</span>
-              <span className="text-[20px] font-extrabold text-emerald-500 leading-none mt-0.5">
+              <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500">เชิงบวก</span>
+              <span className="text-[20px] font-extrabold text-emerald-500 dark:text-emerald-400 leading-none mt-0.5">
                 {sentimentData.percentage}%
               </span>
             </div>
@@ -201,9 +181,9 @@ export default function DashboardCharts({
                   className="h-2.5 w-2.5 rounded-full shrink-0 shadow-md"
                   style={{ backgroundColor: d.color, boxShadow: `0 0 6px ${d.color}` }}
                 />
-                <div className="flex justify-between flex-1 text-[12px] font-semibold text-slate-600">
+                <div className="flex justify-between flex-1 text-[12px] font-semibold text-slate-600 dark:text-slate-400">
                   <span>{d.label.split(' (')[0]}</span>
-                  <span className="font-extrabold text-slate-800">{d.value}%</span>
+                  <span className="font-extrabold text-slate-800 dark:text-slate-100">{d.value}%</span>
                 </div>
               </div>
             ))}
@@ -216,9 +196,9 @@ export default function DashboardCharts({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="glass-card rounded-[24px] p-6 shadow-[0_10px_30px_-10px_rgba(0,81,186,0.05)] border border-slate-200/50">
+        className="glass-card rounded-[24px] p-6 shadow-[0_10px_30px_-10px_rgba(0,81,186,0.05)] dark:shadow-none border border-slate-200/50 dark:border-white/5">
         <CardHeader
-          iconBg="bg-amber-50" iconColor="text-amber-500"
+          iconBg="bg-amber-50 dark:bg-amber-950/50" iconColor="text-amber-500 dark:text-amber-400"
           icon={<TrendingUp className="h-4.5 w-4.5" />}
           title="แนวโน้มคะแนน CSAT"
           subtitle="ค่าคะแนนเฉลี่ยความพอใจรายสัปดาห์ (1-5 ดาว)"
@@ -232,7 +212,7 @@ export default function DashboardCharts({
                   <stop offset="100%" stopColor="#0051BA" stopOpacity={0.0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(226, 232, 240, 0.6)" />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(148, 163, 184, 0.15)" />
               <XAxis dataKey="name" axisLine={false} tickLine={false}
                 tick={{ fontSize: 9, fontWeight: 700, fill: '#64748B' }} />
               <YAxis axisLine={false} tickLine={false} domain={[1, 5]}

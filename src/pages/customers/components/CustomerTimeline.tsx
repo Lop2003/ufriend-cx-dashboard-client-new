@@ -39,17 +39,17 @@ export default function CustomerTimeline({ followUps = [], onRefresh }: Customer
   };
 
   return (
-    <div className="glass-card rounded-[20px] p-6 border border-slate-200/80 shadow-[0_8px_30px_rgba(0,81,186,0.02)] text-left">
+    <div className="glass-card rounded-[20px] p-6 border border-border bg-card text-card-foreground shadow-[0_8px_30px_rgba(0,0,0,0.15)] text-left">
       {/* Header */}
-      <div className="flex items-center gap-3.5 mb-6 pb-4 border-b border-slate-200/80 text-left">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-50 text-indigo-500 shadow-sm">
+      <div className="flex items-center gap-3.5 mb-6 pb-4 border-b border-border text-left">
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-50 dark:bg-indigo-950/40 text-indigo-500 shadow-sm">
           <ClipboardList className="h-4.5 w-4.5" />
         </div>
         <div>
-          <span className="block text-[12.5px] font-extrabold uppercase tracking-wider text-slate-800">
+          <span className="block text-[12.5px] font-extrabold uppercase tracking-wider text-slate-800 dark:text-slate-100">
             บันทึกการติดตามความคืบหน้า (Timeline)
           </span>
-          <span className="block text-[11px] font-semibold text-slate-400">
+          <span className="block text-[11px] font-semibold text-slate-400 dark:text-slate-500">
             ประวัติการประสานงานและแนวทางการดูแลผู้บริโภค
           </span>
         </div>
@@ -58,10 +58,10 @@ export default function CustomerTimeline({ followUps = [], onRefresh }: Customer
       {/* Logs timeline list */}
       {followUps.length === 0 ? (
         <div className="py-10 flex flex-col items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-300">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted text-muted-foreground/60">
             <Clock className="h-6 w-6 stroke-[1.5]" />
           </div>
-          <span className="text-[12px] font-bold text-slate-400">
+          <span className="text-[12px] font-bold text-slate-400 dark:text-slate-500">
             ยังไม่มีประวัติการโทรหรือติดตามลูกค้ารายนี้
           </span>
         </div>
@@ -82,15 +82,15 @@ export default function CustomerTimeline({ followUps = [], onRefresh }: Customer
                     <div
                       className={`absolute left-[7px] top-[22px] bottom-[-22px] w-[2px] z-0 ${
                         isDone 
-                        ? 'bg-gradient-to-b from-emerald-500 to-slate-200' 
-                        : 'bg-slate-200'
+                        ? 'bg-gradient-to-b from-emerald-500 to-border' 
+                        : 'bg-border'
                     }`}
                   />
                 )}
 
                 {/* Interactive timeline node dot */}
                 <div
-                  className={`absolute left-0 top-1 w-4 h-4 rounded-full border-2 border-white shadow-sm flex items-center justify-center z-10 transition-all duration-200`}
+                  className={`absolute left-0 top-1 w-4 h-4 rounded-full border-2 border-white dark:border-slate-900 shadow-sm flex items-center justify-center z-10 transition-all duration-200`}
                   style={{ 
                     backgroundColor: isDone ? '#10B981' : typeInfo.color,
                     boxShadow: isDone 
@@ -106,7 +106,7 @@ export default function CustomerTimeline({ followUps = [], onRefresh }: Customer
                 </div>
 
                 {/* Detail card */}
-                <div className="glass-card rounded-2xl p-4 border border-slate-200/60 shadow-[0_4px_15px_rgba(0,81,186,0.01)] transition-all hover:bg-slate-50/80 hover:translate-y-[-1px]">
+                <div className="glass-card rounded-2xl p-4 border border-border bg-card shadow-[0_4px_15px_rgba(0,0,0,0.15)] transition-all hover:bg-slate-50/80 dark:hover:bg-slate-800/40 hover:translate-y-[-1px]">
                   
                   {/* Top: Date and Type Badge */}
                   <div className="flex justify-between items-center gap-2 mb-3">
@@ -121,19 +121,19 @@ export default function CustomerTimeline({ followUps = [], onRefresh }: Customer
                     >
                       {typeInfo.label}
                     </Badge>
-                    <span className="text-[10px] font-bold text-slate-400 font-sans">
+                    <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 font-sans">
                       {formatDate(fu.created_at)}
                     </span>
                   </div>
 
                   {/* Log description card */}
-                  <p className="text-[12px] text-slate-700 font-medium leading-relaxed bg-white border border-slate-200/60 p-3 rounded-xl mb-4 text-left">
+                  <p className="text-[12px] text-slate-700 dark:text-slate-300 font-medium leading-relaxed bg-muted/20 border border-border p-3 rounded-xl mb-4 text-left">
                     {fu.note}
                   </p>
 
                   {/* Actions & Author Footer */}
                   <div className="flex flex-wrap justify-between items-center gap-2 mt-4">
-                    <span className="text-[10.5px] font-bold text-slate-400">
+                    <span className="text-[10.5px] font-bold text-slate-400 dark:text-slate-550">
                       ผู้บันทึก: ฝ่ายลูกค้าสัมพันธ์ uFriend
                     </span>
 
@@ -144,7 +144,7 @@ export default function CustomerTimeline({ followUps = [], onRefresh }: Customer
                           type="button"
                           disabled={updatingId === fu.id}
                           onClick={() => handleComplete(fu.id)}
-                          className="inline-flex items-center gap-1 text-[9.5px] font-extrabold text-[#0051bb] border border-blue-200 bg-white px-2 py-1 rounded-md transition-all hover:bg-[#0051bb] hover:text-white hover:border-transparent disabled:opacity-50"
+                          className="inline-flex items-center gap-1 text-[9.5px] font-extrabold text-[#0051bb] dark:text-blue-400 border border-blue-200 dark:border-blue-900/50 bg-card text-foreground px-2 py-1 rounded-md transition-all hover:bg-[#0051bb] dark:hover:bg-blue-600 hover:text-white hover:border-transparent disabled:opacity-50 cursor-pointer"
                         >
                           {updatingId === fu.id ? (
                             <Loader2 className="h-2.5 w-2.5 animate-spin" />
@@ -160,8 +160,8 @@ export default function CustomerTimeline({ followUps = [], onRefresh }: Customer
                         variant="outline"
                         className={`h-5 px-2 py-0 text-[9px] font-extrabold rounded-md flex items-center gap-1 ${
                           isDone
-                            ? 'bg-emerald-50 text-emerald-500 border-emerald-100/70 hover:bg-emerald-50'
-                            : 'bg-rose-50 text-rose-500 border-rose-100/70 hover:bg-rose-50'
+                            ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-500 dark:text-emerald-400 border-emerald-100/70 dark:border-emerald-900/50 hover:bg-emerald-50'
+                            : 'bg-rose-50 dark:bg-rose-950/40 text-rose-500 dark:text-rose-400 border-rose-100/70 dark:border-rose-900/50 hover:bg-rose-50'
                         }`}
                       >
                         {isDone && <CheckCircle2 className="h-2.5 w-2.5" />}

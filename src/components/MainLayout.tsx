@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import Sidebar from './Sidebar';
+import ThemeToggle from './ThemeToggle';
 import { PATHS } from '../routes/paths';
 import { SidebarProvider } from '@/components/animate-ui/components/radix/sidebar';
 import type { AuthUser } from '@/services/authService';
@@ -30,7 +31,7 @@ export default function MainLayout({ children, user, onLogout }: MainLayoutProps
 
   return (
     <SidebarProvider>
-      <div className="relative flex h-screen w-screen overflow-hidden bg-slate-50 text-slate-900">
+      <div className="relative flex h-screen w-screen overflow-hidden bg-slate-50 dark:bg-[#0a0e1a] text-slate-900 dark:text-slate-100">
 
       {/* Saturated Neon Accent Orbs (Floating Ambient Glows) */}
       <motion.div
@@ -45,7 +46,7 @@ export default function MainLayout({ children, user, onLogout }: MainLayoutProps
           repeat: Infinity,
           ease: 'easeInOut',
         }}
-        className="absolute -left-[5%] -top-[10%] h-[450px] w-[450px] rounded-full bg-blue-600/15 blur-[80px] pointer-events-none z-0"
+        className="absolute -left-[5%] -top-[10%] h-[450px] w-[450px] rounded-full bg-blue-600/15 dark:bg-blue-500/8 blur-[80px] pointer-events-none z-0"
       />
       <motion.div
         animate={{
@@ -59,7 +60,7 @@ export default function MainLayout({ children, user, onLogout }: MainLayoutProps
           repeat: Infinity,
           ease: 'easeInOut',
         }}
-        className="absolute -right-[5%] -bottom-[5%] h-[450px] w-[450px] rounded-full bg-yellow-500/12 blur-[90px] pointer-events-none z-0"
+        className="absolute -right-[5%] -bottom-[5%] h-[450px] w-[450px] rounded-full bg-yellow-500/12 dark:bg-yellow-500/5 blur-[90px] pointer-events-none z-0"
       />
 
       {/* ── Desktop Sidebar Container ─────────────────────────────── */}
@@ -111,37 +112,40 @@ export default function MainLayout({ children, user, onLogout }: MainLayoutProps
 
       {/* ── Main Content Container ───────────────────────────────── */}
       <div className="relative flex flex-1 flex-col overflow-hidden p-0 z-10">
-        <div className="flex flex-1 flex-col overflow-hidden bg-white/95 md:rounded-none border-l border-slate-200/80">
+        <div className="flex flex-1 flex-col overflow-hidden bg-white/95 dark:bg-white/[0.02] md:rounded-none border-l border-slate-200/80 dark:border-white/5">
           
           {/* Header */}
-          <header className="flex h-14 items-center border-b border-slate-200/80 bg-white px-4 md:px-8 shrink-0">
+          <header className="flex h-14 items-center border-b border-slate-200/80 dark:border-white/5 bg-white dark:bg-transparent px-4 md:px-8 shrink-0">
             {/* Mobile Menu Toggle Button */}
             <button
               onClick={() => setMobileOpen(true)}
-              className="flex md:hidden h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 mr-3"
+              className="flex md:hidden h-9 w-9 items-center justify-center rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/10 mr-3"
             >
               <Menu className="h-5 w-5" />
             </button>
 
             {/* Breadcrumbs */}
             <div className="flex items-center gap-2 mr-auto">
-              <Badge variant="secondary" className="px-2.5 py-0.5 bg-blue-50 text-[10px] uppercase font-extrabold tracking-wider text-[#0051bb] border border-blue-100 rounded-md">
+              <Badge variant="secondary" className="px-2.5 py-0.5 bg-blue-50 dark:bg-blue-950/50 text-[10px] uppercase font-extrabold tracking-wider text-[#0051bb] dark:text-blue-400 border border-blue-100 dark:border-blue-900/50 rounded-md">
                 {pageInfo.label}
               </Badge>
               {pageInfo.breadcrumb && (
                 <>
-                  <span className="text-slate-300 font-normal">/</span>
-                  <span className="text-[11.5px] font-bold text-slate-500 uppercase tracking-wider">
+                  <span className="text-slate-300 dark:text-slate-600 font-normal">/</span>
+                  <span className="text-[11.5px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                     {pageInfo.breadcrumb}
                   </span>
                 </>
               )}
             </div>
 
+            {/* Theme Toggle Button */}
+            <ThemeToggle />
+
           </header>
 
           {/* Scrollable page area */}
-          <main className="flex-1 overflow-y-auto p-4 md:p-6 bg-slate-50/50">
+          <main className="flex-1 overflow-y-auto p-4 md:p-6 bg-slate-50/50 dark:bg-transparent">
             <div className="page-transition min-h-full">
               {children}
             </div>

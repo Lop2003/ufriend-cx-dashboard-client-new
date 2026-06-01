@@ -28,8 +28,8 @@ const STAT_CONFIG = [
     color: '#0051BA', 
     icon: Users,
     borderColorClass: 'border-blue-500', 
-    activeBgClass: 'bg-blue-50/70 border-blue-500 shadow-[0_12px_28px_-10px_rgba(0,81,186,0.35),0_0_0_3px_rgba(0,81,186,0.15)]',
-    iconColorClass: 'text-[#0051BA] bg-blue-50' 
+    activeBgClass: 'bg-blue-50/70 dark:bg-blue-950/40 border-blue-500 shadow-[0_12px_28px_-10px_rgba(0,81,186,0.35),0_0_0_3px_rgba(0,81,186,0.15)]',
+    iconColorClass: 'text-[#0051BA] dark:text-blue-400 bg-blue-50 dark:bg-blue-950/50' 
   },
   { 
     key: 'active', 
@@ -38,8 +38,8 @@ const STAT_CONFIG = [
     color: '#10B981', 
     icon: CheckCircle2,
     borderColorClass: 'border-emerald-500', 
-    activeBgClass: 'bg-emerald-50/70 border-emerald-500 shadow-[0_12px_28px_-10px_rgba(16,185,129,0.35),0_0_0_3px_rgba(16,185,129,0.15)]',
-    iconColorClass: 'text-emerald-500 bg-emerald-50' 
+    activeBgClass: 'bg-emerald-50/70 dark:bg-emerald-950/40 border-emerald-500 shadow-[0_12px_28px_-10px_rgba(16,185,129,0.35),0_0_0_3px_rgba(16,185,129,0.15)]',
+    iconColorClass: 'text-emerald-500 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50' 
   },
   { 
     key: 'overdue', 
@@ -48,8 +48,8 @@ const STAT_CONFIG = [
     color: '#EF4444', 
     icon: AlertTriangle,
     borderColorClass: 'border-red-500', 
-    activeBgClass: 'bg-red-50/70 border-red-500 shadow-[0_12px_28px_-10px_rgba(239,68,68,0.35),0_0_0_3px_rgba(239,68,68,0.15)]',
-    iconColorClass: 'text-red-500 bg-red-50' 
+    activeBgClass: 'bg-red-50/70 dark:bg-red-950/40 border-red-500 shadow-[0_12px_28px_-10px_rgba(239,68,68,0.35),0_0_0_3px_rgba(239,68,68,0.15)]',
+    iconColorClass: 'text-red-500 dark:text-red-400 bg-red-50 dark:bg-red-950/50' 
   },
   { 
     key: 'completed', 
@@ -58,8 +58,8 @@ const STAT_CONFIG = [
     color: '#64748B', 
     icon: FileCheck2,
     borderColorClass: 'border-slate-500', 
-    activeBgClass: 'bg-slate-100/70 border-slate-500 shadow-[0_12px_28px_-10px_rgba(100,116,139,0.35),0_0_0_3px_rgba(100,116,139,0.15)]',
-    iconColorClass: 'text-slate-500 bg-slate-100' 
+    activeBgClass: 'bg-slate-100/70 dark:bg-slate-800/40 border-slate-500 shadow-[0_12px_28px_-10px_rgba(100,116,139,0.35),0_0_0_3px_rgba(100,116,139,0.15)]',
+    iconColorClass: 'text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/50' 
   },
 ];
 
@@ -81,20 +81,20 @@ function StatCard({
       className={`glass-card relative overflow-hidden rounded-2xl p-5 px-6 border text-left transition-all duration-300 ${
         isActive 
           ? activeBgClass 
-          : 'border-white/50 shadow-[0_8px_30px_rgba(0,81,186,0.02)] hover:border-slate-300 hover:translate-y-[-2px] hover:shadow-lg'
+          : 'border-white/50 dark:border-white/5 shadow-[0_8px_30px_rgba(0,81,186,0.02)] dark:shadow-none hover:border-slate-300 dark:hover:border-white/10 hover:translate-y-[-2px] hover:shadow-lg'
       } ${isLoading ? 'cursor-default pointer-events-none' : 'cursor-pointer active:scale-[0.98]'}`}
     >
       {/* Background soft glow */}
       <div 
-        className="absolute -right-5 -top-5 h-14 w-14 rounded-full blur-[8px] opacity-15 pointer-events-none"
+        className="absolute -right-5 -top-5 h-14 w-14 rounded-full blur-[8px] opacity-15 dark:opacity-10 pointer-events-none"
         style={{ background: `radial-gradient(circle, ${color} 0%, transparent 75%)` }}
       />
 
       <div className="flex justify-between items-center mb-3">
-        <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500">
+        <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">
           {label}
         </span>
-        <div className={`flex h-7.5 w-7.5 items-center justify-center rounded-lg shadow-sm ${iconColorClass}`}>
+        <div className={`flex h-7.5 w-7.5 items-center justify-center rounded-lg shadow-sm dark:shadow-none ${iconColorClass}`}>
           <Icon className="h-4 w-4" />
         </div>
       </div>
@@ -102,18 +102,18 @@ function StatCard({
       <div className="flex items-baseline gap-1">
         {isLoading ? (
           <div className="flex items-center gap-2">
-            <Loader2 className="h-5 w-5 animate-spin text-slate-300" />
-            <span className="text-xs font-semibold text-slate-300">กำลังโหลด...</span>
+            <Loader2 className="h-5 w-5 animate-spin text-slate-300 dark:text-slate-600" />
+            <span className="text-xs font-semibold text-slate-300 dark:text-slate-600">กำลังโหลด...</span>
           </div>
         ) : (
           <>
             <span 
               className="text-[26px] font-extrabold leading-none tracking-tight"
-              style={{ color: isActive ? color : '#1e293b' }}
+              style={{ color: isActive ? color : undefined }}
             >
-              {value.toLocaleString()}
+              <span className={isActive ? '' : 'text-slate-800 dark:text-slate-100'}>{value.toLocaleString()}</span>
             </span>
-            <span className="text-[11.5px] font-bold text-slate-400 ml-1">ราย</span>
+            <span className="text-[11.5px] font-bold text-slate-400 dark:text-slate-500 ml-1">ราย</span>
           </>
         )}
       </div>
