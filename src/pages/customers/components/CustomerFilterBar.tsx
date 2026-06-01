@@ -68,7 +68,7 @@ export default function CustomerFilterBar({
             value={selectedBranch || "ALL_BRANCHES"}
             onValueChange={(val) => setSelectedBranch(val === "ALL_BRANCHES" ? "" : val)}
           >
-            <SelectTrigger className="h-10 rounded-xl border-slate-200/80 bg-white/70 text-[12px] font-bold text-slate-700">
+            <SelectTrigger className="h-10 w-full rounded-xl border-slate-200/80 bg-white/70 text-[12px] font-bold text-slate-700">
               <SelectValue placeholder="เลือกสาขา" />
             </SelectTrigger>
             <SelectContent className="rounded-xl border-slate-200/80">
@@ -90,7 +90,7 @@ export default function CustomerFilterBar({
             value={selectedStatus || "ALL_STATUSES"}
             onValueChange={(val) => setSelectedStatus(val === "ALL_STATUSES" ? "" : val)}
           >
-            <SelectTrigger className="h-10 rounded-xl border-slate-200/80 bg-white/70 text-[12px] font-bold text-slate-700">
+            <SelectTrigger className="h-10 w-full rounded-xl border-slate-200/80 bg-white/70 text-[12px] font-bold text-slate-700">
               <SelectValue placeholder="เลือกสถานะ" />
             </SelectTrigger>
             <SelectContent className="rounded-xl border-slate-200/80">

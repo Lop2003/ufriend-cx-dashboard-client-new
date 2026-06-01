@@ -39,8 +39,8 @@ export default function CustomerDetailModal({ selectedCustomerId, isOpen, onClos
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-[92vw] lg:max-w-6xl rounded-3xl p-0 overflow-hidden border border-slate-200 shadow-2xl bg-[#F3F7FC] max-h-[92vh] flex flex-col">
-        
+      <DialogContent showCloseButton={false} className="max-w-[92vw] lg:max-w-6xl rounded-3xl p-0 gap-0 overflow-hidden border border-slate-200 shadow-2xl bg-[#F3F7FC] max-h-[92vh] flex flex-col">
+
         {/* Dialog Header */}
         <DialogHeader className="flex flex-row items-center justify-between px-6 py-4 border-b border-slate-200/80 bg-white/40 backdrop-blur-md shrink-0">
           <DialogTitle className="flex items-center gap-2">
@@ -52,7 +52,7 @@ export default function CustomerDetailModal({ selectedCustomerId, isOpen, onClos
               ประวัติการประสานงานและดูแลลูกค้าเชิงลึก
             </span>
           </DialogTitle>
-          
+
           <button
             onClick={onClose}
             className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 bg-slate-50/80 text-slate-500 transition-all hover:bg-slate-100 hover:text-slate-700 hover:scale-105"
@@ -62,7 +62,7 @@ export default function CustomerDetailModal({ selectedCustomerId, isOpen, onClos
         </DialogHeader>
 
         {/* Scrollable Dialog Content */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        <div className="flex-1 overflow-y-auto p-6 pt-3.5 space-y-5">
           {detailLoading ? (
             <div className="py-20 flex flex-col items-center justify-center gap-4">
               <Loader2 className="h-10 w-10 animate-spin text-[#0051bb]" />
@@ -89,7 +89,7 @@ export default function CustomerDetailModal({ selectedCustomerId, isOpen, onClos
                   <MessageSquare className="h-4 w-4" />
                   บันทึกการส่งคำติชม
                 </button>
-                
+
                 <button
                   type="button"
                   onClick={handleAddFollowUp}

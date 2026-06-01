@@ -5,12 +5,7 @@ import { motion } from "framer-motion"
 import { Store, X } from "lucide-react"
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts"
 
-import {
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+
 import {
   ChartContainer,
   ChartTooltip,
@@ -108,20 +103,20 @@ export function DashboardChartArea({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0 }}
-      className="rounded-[24px] border border-slate-200/50 bg-white/95 shadow-[0_10px_30px_-10px_rgba(0,81,186,0.05)] overflow-hidden text-left"
-      >
-        <CardHeader className="flex flex-row items-center justify-between gap-4 pb-4 border-b border-slate-200/80">
+      className="glass-card rounded-[24px] p-6 shadow-[0_10px_30px_-10px_rgba(0,81,186,0.05)] border border-slate-200/50 text-left"
+    >
+      <div className="flex flex-row items-center justify-between gap-4 pb-4 border-b border-slate-200/80 mb-6">
         <div className="flex items-center gap-3.5">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50 text-[#0051BA] shadow-sm">
             <Store className="h-4.5 w-4.5" />
           </div>
           <div>
-            <CardTitle className="text-[12.5px] font-extrabold uppercase tracking-wider text-slate-800">
+            <span className="block text-[12.5px] font-extrabold uppercase tracking-wider text-slate-800">
               {title}
-            </CardTitle>
-            <CardDescription className="text-[11px] font-semibold text-slate-400">
+            </span>
+            <span className="block text-[11px] font-semibold text-slate-400">
               {subtitle}
-            </CardDescription>
+            </span>
           </div>
         </div>
 
@@ -135,9 +130,9 @@ export function DashboardChartArea({
             <X className="h-3 w-3" />
           </button>
         )}
-      </CardHeader>
+      </div>
       
-      <CardContent className="px-3 pt-6 sm:px-6">
+      <div className="h-[260px]">
         <ChartContainer
           config={fullChartConfig}
           className="h-[260px] w-full aspect-auto"
@@ -231,7 +226,7 @@ export function DashboardChartArea({
             )}
           </AreaChart>
         </ChartContainer>
-      </CardContent>
+      </div>
     </motion.div>
   )
 }

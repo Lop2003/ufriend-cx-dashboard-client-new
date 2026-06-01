@@ -127,12 +127,12 @@ export default function CustomerTimeline({ followUps = [], onRefresh }: Customer
                   </div>
 
                   {/* Log description card */}
-                  <p className="text-[12px] text-slate-700 font-medium leading-relaxed bg-white border border-slate-200/60 p-3 rounded-xl mb-4.5 text-left">
+                  <p className="text-[12px] text-slate-700 font-medium leading-relaxed bg-white border border-slate-200/60 p-3 rounded-xl mb-4 text-left">
                     {fu.note}
                   </p>
 
                   {/* Actions & Author Footer */}
-                  <div className="flex flex-wrap justify-between items-center gap-2">
+                  <div className="flex flex-wrap justify-between items-center gap-2 mt-4">
                     <span className="text-[10.5px] font-bold text-slate-400">
                       ผู้บันทึก: ฝ่ายลูกค้าสัมพันธ์ uFriend
                     </span>

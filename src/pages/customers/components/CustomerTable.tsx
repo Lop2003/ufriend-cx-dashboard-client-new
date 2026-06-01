@@ -164,10 +164,10 @@ export default function CustomerTable({
                   <TableRow
                     key={c.id}
                     onClick={() => onRowClick?.(c.id)}
-                    className={`cursor-pointer hover:bg-slate-50/50 transition-colors border-l-4 ${
+                    className={`cursor-pointer hover:bg-slate-50/70 transition-all duration-300 border-l-4 relative group ${
                       isOverdue 
-                        ? 'border-l-red-500 bg-red-500/[0.015] hover:bg-red-500/[0.035]' 
-                        : 'border-l-transparent'
+                        ? 'border-l-red-500 bg-red-500/[0.015] hover:bg-red-500/[0.035] hover:shadow-[inset_0_0_0_1px_rgba(239,68,68,0.08)]' 
+                        : 'border-l-transparent hover:border-l-[#0051bb] hover:bg-blue-500/[0.01] hover:shadow-[inset_0_0_0_1px_rgba(0,81,186,0.04)]'
                     }`}
                   >
                     <TableCell className="font-mono text-[11.5px] font-semibold text-slate-500 tracking-wide">

@@ -42,7 +42,11 @@ export default function DashboardFilters({
           value={selectedBranch || "ALL_BRANCHES"}
           onValueChange={(val) => setSelectedBranch(val === "ALL_BRANCHES" ? "" : val)}
         >
-          <SelectTrigger className="h-9 rounded-xl border-slate-200/80 bg-white/70 text-[12px] font-bold text-slate-700">
+          <SelectTrigger className={`h-9 w-full rounded-xl text-[12px] font-bold transition-all duration-300 ${
+            selectedBranch 
+              ? 'border-[#0051bb] bg-blue-50/45 text-[#0051bb] shadow-[0_0_15px_rgba(0,81,186,0.12),0_0_0_2px_rgba(0,81,186,0.05)]' 
+              : 'border-slate-200/80 bg-white/70 text-slate-700 hover:border-slate-300'
+          }`}>
             <SelectValue placeholder="เลือกสาขา" />
           </SelectTrigger>
           <SelectContent className="rounded-xl border-slate-200/80">
