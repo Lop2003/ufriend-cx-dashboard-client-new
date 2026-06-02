@@ -63,18 +63,46 @@ export default function DashboardCharts({
     const pNeg = Math.round((neg / total) * 100);
     return {
       percentage: pPos,
+      total,
       chartData: [
-        { name: 'positive', value: pPos, color: '#10B981', label: 'พอใจ (Positive)' },
-        { name: 'neutral', value: pNeu, color: '#F59E0B', label: 'เฉยๆ (Neutral)' },
-        { name: 'negative', value: pNeg, color: '#EF4444', label: 'ไม่พอใจ (Negative)' },
+        { name: 'positive', value: pPos, count: pos, color: '#10B981', label: 'พอใจ (Positive)' },
+        { name: 'neutral', value: pNeu, count: neu, color: '#F59E0B', label: 'เฉยๆ (Neutral)' },
+        { name: 'negative', value: pNeg, count: neg, color: '#EF4444', label: 'ไม่พอใจ (Negative)' },
       ],
     };
   }, [summaryStats]);
+
+  // Build dynamic subtitle for sentiment chart based on active filters
+  const sentimentSubtitle = useMemo(() => {
+    const parts: string[] = [];
+    if (selectedBranch) parts.push(`สาขา${selectedBranch}`);
+    if (selectedPeriod === '7d') parts.push('7 วันล่าสุด');
+    else if (selectedPeriod === '1m') parts.push('1 เดือนล่าสุด');
+    else if (selectedPeriod === '3m') parts.push('3 เดือนล่าสุด');
+    const filterText = parts.length > 0 ? ` (${parts.join(' · ')})` : '';
+    return `ผลลัพธ์การวิเคราะห์อารมณ์จากรีวิว ${sentimentData.total.toLocaleString()} รายการ${filterText}`;
+  }, [selectedBranch, selectedPeriod, sentimentData.total]);
 
   // 3. Line chart: weekly CSAT trend — ChartConfig for shadcn
   const csatConfig = {
     score: { label: 'CSAT Score', color: '#0051BA' },
   } satisfies ChartConfig
+
+  // Build dynamic subtitle for CSAT chart based on active filters
+  const csatSubtitle = useMemo(() => {
+    const parts: string[] = [];
+    if (selectedBranch) parts.push(`สาขา${selectedBranch}`);
+    if (selectedPeriod === '7d') parts.push('7 วันล่าสุด');
+    else if (selectedPeriod === '1m') parts.push('1 เดือนล่าสุด');
+    else if (selectedPeriod === '3m') parts.push('3 เดือนล่าสุด');
+    const filterText = parts.length > 0 ? ` (${parts.join(' · ')})` : '';
+    
+    let baseTitle = 'ค่าคะแนนเฉลี่ยความพอใจรายสัปดาห์ (1-5 ดาว)';
+    if (selectedPeriod === '7d') {
+      baseTitle = 'ค่าคะแนนเฉลี่ยความพอใจรายวัน (1-5 ดาว)';
+    }
+    return `${baseTitle}${filterText}`;
+  }, [selectedBranch, selectedPeriod]);
 
   const weeklyTrendsData = useMemo(() => {
     const csat = summaryStats.weeklyCSAT || [4.0, 4.0, 4.0, 4.0];
@@ -83,30 +111,42 @@ export default function DashboardCharts({
       'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'
     ];
     const now = new Date();
+    const len = csat.length;
 
     return csat.map((score, i) => {
-      const startOffset = - (4 - i) * 7;
-      const endOffset = - (3 - i) * 7;
+      if (selectedPeriod === '7d') {
+        const dateOffset = - (len - 1 - i);
+        const targetDate = new Date(now.getTime() + dateOffset * 24 * 60 * 60 * 1000);
+        const day = targetDate.getDate();
+        const month = thaiMonths[targetDate.getMonth()];
+        return {
+          name: `${day} ${month}`,
+          score: score,
+        };
+      } else {
+        const startOffset = - (len - i) * 7;
+        const endOffset = - (len - 1 - i) * 7;
 
-      const startDate = new Date(now.getTime() + startOffset * 24 * 60 * 60 * 1000);
-      const endDate = new Date(now.getTime() + endOffset * 24 * 60 * 60 * 1000);
+        const startDate = new Date(now.getTime() + startOffset * 24 * 60 * 60 * 1000);
+        const endDate = new Date(now.getTime() + endOffset * 24 * 60 * 60 * 1000);
 
-      const startDay = startDate.getDate();
-      const startMonth = thaiMonths[startDate.getMonth()];
-      
-      const endDay = endDate.getDate();
-      const endMonth = thaiMonths[endDate.getMonth()];
+        const startDay = startDate.getDate();
+        const startMonth = thaiMonths[startDate.getMonth()];
+        
+        const endDay = endDate.getDate();
+        const endMonth = thaiMonths[endDate.getMonth()];
 
-      const dateLabel = startMonth === endMonth
-        ? `${startDay}-${endDay} ${startMonth}`
-        : `${startDay} ${startMonth} - ${endDay} ${endMonth}`;
+        const dateLabel = startMonth === endMonth
+          ? `${startDay}-${endDay} ${startMonth}`
+          : `${startDay} ${startMonth} - ${endDay} ${endMonth}`;
 
-      return {
-        name: dateLabel,
-        score: score,
-      };
+        return {
+          name: dateLabel,
+          score: score,
+        };
+      }
     });
-  }, [summaryStats]);
+  }, [summaryStats, selectedPeriod]);
 
   const CardHeader = ({ iconBg, iconColor, icon, title, subtitle }: { iconBg: string; iconColor: string; icon: React.ReactNode; title: string; subtitle: string }) => (
     <div className="flex items-center gap-3.5 mb-6 pb-4 border-b border-slate-200/80 dark:border-white/5 text-left">
@@ -172,9 +212,9 @@ export default function DashboardCharts({
             iconBg="bg-emerald-50 dark:bg-emerald-950/50" iconColor="text-emerald-500 dark:text-emerald-400"
             icon={<Smile className="h-4.5 w-4.5" />}
             title="สัดส่วน Sentiment ความรู้สึก"
-            subtitle="ผลลัพธ์การวิเคราะห์อารมณ์ในข้อความติชม"
+            subtitle={sentimentSubtitle}
           />
-          <div className="h-[260px] flex flex-col sm:flex-row items-center justify-center gap-6 px-1">
+          <div className="h-[260px] flex flex-col sm:flex-row items-center justify-center gap-8 px-4 max-w-[480px] mx-auto w-full">
             <div className="relative h-36 w-36 shrink-0">
               <ChartContainer config={sentimentConfig} className="h-full w-full">
                 <PieChart>
@@ -221,7 +261,7 @@ export default function DashboardCharts({
                   />
                   <div className="flex justify-between flex-1 text-[12px] font-semibold text-slate-600 dark:text-slate-400">
                     <span>{d.label.split(' (')[0]}</span>
-                    <span className="font-extrabold text-slate-800 dark:text-slate-100">{d.value}%</span>
+                    <span className="font-extrabold text-slate-800 dark:text-slate-100">{d.value}% <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">({d.count.toLocaleString()})</span></span>
                   </div>
                 </div>
               ))}
@@ -239,7 +279,7 @@ export default function DashboardCharts({
             iconBg="bg-amber-50 dark:bg-amber-950/50" iconColor="text-amber-500 dark:text-amber-400"
             icon={<TrendingUp className="h-4.5 w-4.5" />}
             title="แนวโน้มคะแนน CSAT"
-            subtitle="ค่าคะแนนเฉลี่ยความพอใจรายสัปดาห์ (1-5 ดาว)"
+            subtitle={csatSubtitle}
           />
           <div className="h-[260px]">
             <ChartContainer config={csatConfig} className="h-[260px] w-full">
@@ -264,7 +304,7 @@ export default function DashboardCharts({
                     />
                   }
                 />
-                <Area type="monotone" dataKey="score" stroke="none" fill="url(#areaGlow)" />
+                <Area type="monotone" dataKey="score" stroke="none" fill="url(#areaGlow)" tooltipType="none" legendType="none" />
                 <Line
                   type="monotone"
                   dataKey="score"
