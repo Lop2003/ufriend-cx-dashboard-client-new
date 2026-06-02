@@ -57,7 +57,7 @@ export default function DashboardPage() {
               )}
               {selectedPeriod && (
                 <span className="inline-flex items-center rounded-full bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 px-3 py-1 text-[10px] font-extrabold text-indigo-600 dark:text-indigo-300 tracking-wide">
-                  {selectedPeriod === '7d' ? '7 วันล่าสุด' : '1 เดือนล่าสุด'}
+                  {selectedPeriod === '7d' ? '7 วันล่าสุด' : selectedPeriod === '1m' ? '1 เดือนล่าสุด' : '3 เดือนล่าสุด'}
                 </span>
               )}
             </div>

@@ -99,6 +99,9 @@ export default function DashboardFilters({
             <SelectItem value="1m" className="text-[12px] font-semibold text-slate-700 dark:text-slate-300">
               1 เดือนล่าสุด (Last 1 Month)
             </SelectItem>
+            <SelectItem value="3m" className="text-[12px] font-semibold text-slate-700 dark:text-slate-300">
+              3 เดือนล่าสุด (Last 3 Months)
+            </SelectItem>
           </SelectContent>
         </Select>
       </div>
