@@ -2,8 +2,8 @@
 
 import { useMemo } from "react"
 import { motion } from "framer-motion"
-import { Store, X } from "lucide-react"
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts"
+import { TrendingUp, X } from "lucide-react"
+import { Line, LineChart, CartesianGrid, XAxis, YAxis } from "recharts"
 import {
   Select,
   SelectContent,
@@ -19,7 +19,8 @@ import {
   ChartLegendContent,
   type ChartConfig,
 } from "@/components/ui/chart"
-export interface DashboardChartAreaProps {
+
+export interface DashboardChartLineProps {
   branchStats?: Array<{ branch: string; customer_count: number; [key: string]: any }>
   dailyBranchData?: Array<{ date: string; [key: string]: string | number }>
   selectedBranch: string
@@ -28,7 +29,6 @@ export interface DashboardChartAreaProps {
   setSelectedPeriod?: (period: string) => void
 }
 
-// 3. SHADCN/UI CHART CONFIGURATION mapping Thai branch names to specific hex colors
 const baseChartConfig: ChartConfig = {
   "สยาม": { label: "สาขาสยาม", color: "#1e40af" }, // Deep Blue
   "ลาดพร้าว": { label: "สาขาลาดพร้าว", color: "#eab308" }, // Yellow
@@ -41,16 +41,15 @@ const baseChartConfig: ChartConfig = {
   "วงเวียนใหญ่": { label: "สาขาวงเวียนใหญ่", color: "#7c3aed" }, // Purple
 }
 
-export function DashboardChartArea({
+export function DashboardChartLine({
   branchStats = [],
   dailyBranchData,
   selectedBranch,
   setSelectedBranch,
   selectedPeriod = "",
   setSelectedPeriod = () => {},
-}: DashboardChartAreaProps) {
-  // 1. COMPONENT PROPS & DATA STRUCTURE:
-  // Fallback to generating a dynamic time series if dailyBranchData is not provided
+}: DashboardChartLineProps) {
+  
   const chartData = useMemo(() => {
     if (dailyBranchData && dailyBranchData.length > 0) {
       return dailyBranchData
@@ -63,7 +62,7 @@ export function DashboardChartArea({
       return `${yyyy}-${mm}-${dd}`;
     };
 
-    let numDays = 180; // All time fallback
+    let numDays = 180;
     if (selectedPeriod === "7d") {
       numDays = 7;
     } else if (selectedPeriod === "1m") {
@@ -90,10 +89,9 @@ export function DashboardChartArea({
         const stat = branchStats?.find((s) => s.branch === branch)
         const totalCount = stat ? stat.customer_count : 100
 
-        // Stable seeded random values per branch for realistic curves
         const seed = branch.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0)
         const val = Math.sin(index + seed)
-        const factor = (val + 1) / 2 // 0 to 1
+        const factor = (val + 1) / 2
         const safeKey = branch.replace(/\s+/g, "_")
         // Scale down all-time customer totals to daily registrations based on the 365-day database timeline
         row[safeKey] = Math.max(10, Math.round((totalCount * (0.55 + factor * 0.45)) / 365))
@@ -102,11 +100,10 @@ export function DashboardChartArea({
     })
   }, [dailyBranchData, branchStats, selectedPeriod])
 
-  // Extract all dynamic branch keys (excluding 'date'), sorted by average value
-  // descending so that the largest branches sit at the bottom of the stacked area chart
   const branchKeys = useMemo(() => {
     if (!chartData || chartData.length === 0) return []
     const keys = Object.keys(chartData[0]).filter((key) => key !== "date")
+    // Sort by average descending for consistent order
     return keys.sort((a, b) => {
       const avgA = chartData.reduce((sum, row) => sum + (Number(row[a]) || 0), 0) / chartData.length
       const avgB = chartData.reduce((sum, row) => sum + (Number(row[b]) || 0), 0) / chartData.length
@@ -114,7 +111,6 @@ export function DashboardChartArea({
     })
   }, [chartData])
 
-  // Fully compiled chart configuration with fallback styling for unrecognized branches
   const fullChartConfig = useMemo(() => {
     const config = { ...baseChartConfig }
     branchKeys.forEach((branch) => {
@@ -130,7 +126,6 @@ export function DashboardChartArea({
     return config
   }, [branchKeys])
 
-  // Dynamic header strings
   const isBranchSelected = !!selectedBranch
   const safeSelectedBranch = selectedBranch.replace(/\s+/g, "_")
   
@@ -141,22 +136,22 @@ export function DashboardChartArea({
 
   const title = isBranchSelected
     ? `แนวโน้มรายวัน: สาขา${selectedBranch}`
-    : "แนวโน้มยอดลูกค้าและสัดส่วนสาขา"
+    : "เปรียบเทียบแนวโน้มจำนวนลูกค้าจริงรายสาขา"
   const subtitle = isBranchSelected
-    ? `แสดงแนวโน้มจำนวนลูกค้าที่รับบริการรายวัน (${periodText})`
-    : `แสดงสัดส่วนลูกค้าแยกตามสาขาและแนวโน้มการเติบโต (${periodText})`
+    ? `แสดงข้อมูลจำนวนลูกค้าจริงรายวัน (${periodText})`
+    : `แสดงแนวโน้มยอดผู้รับบริการจริงรายสาขาโดยไม่สะสมยอด (${periodText})`
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0 }}
+      transition={{ duration: 0.5, delay: 0.1 }}
       className="glass-card rounded-[24px] p-6 shadow-[0_10px_30px_-10px_rgba(0,81,186,0.05)] dark:shadow-none border border-slate-200/50 dark:border-white/5 text-left"
     >
       <div className="flex flex-col gap-4 pb-4 border-b border-slate-200/80 dark:border-white/5 mb-6 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3.5">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-950/50 text-[#0051BA] dark:text-blue-400 shadow-sm dark:shadow-none">
-            <Store className="h-4.5 w-4.5" />
+            <TrendingUp className="h-4.5 w-4.5" />
           </div>
           <div>
             <span className="block text-[12.5px] font-extrabold uppercase tracking-wider text-slate-800 dark:text-slate-100">
@@ -169,7 +164,6 @@ export function DashboardChartArea({
         </div>
 
         <div className="flex items-center gap-3 sm:ml-auto">
-          {/* Clear filter pill button shown when selectedBranch is active */}
           {isBranchSelected && (
             <button
               onClick={() => setSelectedBranch("")}
@@ -213,28 +207,11 @@ export function DashboardChartArea({
           config={fullChartConfig}
           className="h-[260px] w-full aspect-auto"
         >
-          <AreaChart
+          <LineChart
+            accessibilityLayer
             data={chartData}
             margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
           >
-            <defs>
-              {branchKeys.map((branch) => {
-                const color = fullChartConfig[branch]?.color || "#94a3b8"
-                return (
-                  <linearGradient
-                    key={branch}
-                    id={`fill-${branch}`}
-                    x1="0"
-                    y1="0"
-                    x2="0"
-                    y2="1"
-                  >
-                    <stop offset="5%" stopColor={color} stopOpacity={0.4} />
-                    <stop offset="95%" stopColor={color} stopOpacity={0.01} />
-                  </linearGradient>
-                )
-              })}
-            </defs>
             <CartesianGrid
               strokeDasharray="3 3"
               vertical={false}
@@ -289,16 +266,13 @@ export function DashboardChartArea({
               }
             />
             
-            {/* 2. CONDITIONAL RENDERING LOGIC: */}
             {isBranchSelected ? (
-              /* MODE B: Single Area Chart for the selected branch */
-              <Area
+              <Line
                 key={safeSelectedBranch}
                 dataKey={safeSelectedBranch}
-                type="natural"
-                fill={`url(#fill-${safeSelectedBranch})`}
-                stroke={fullChartConfig[safeSelectedBranch]?.color || "#0051BA"}
-                strokeWidth={3}
+                type="monotone"
+                stroke={`var(--color-${safeSelectedBranch})`}
+                strokeWidth={3.5}
                 dot={{
                   r: 4,
                   strokeWidth: 2,
@@ -313,21 +287,23 @@ export function DashboardChartArea({
                 }}
               />
             ) : (
-              /* MODE A: Stacked Area Chart for all branch layers */
-              branchKeys.map((branch) => (
-                <Area
-                  key={branch}
-                  dataKey={branch}
-                  type="natural"
-                  fill={`url(#fill-${branch})`}
-                  stroke={`var(--color-${branch})`}
-                  stackId="1"
-                  strokeWidth={2}
-                />
-              ))
+              branchKeys.map((branch) => {
+                const color = fullChartConfig[branch]?.color || "var(--color-slate-400)"
+                return (
+                  <Line
+                    key={branch}
+                    dataKey={branch}
+                    type="monotone"
+                    stroke={color}
+                    strokeWidth={2}
+                    dot={false}
+                    activeDot={{ r: 4 }}
+                  />
+                )
+              })
             )}
             <ChartLegend content={<ChartLegendContent />} className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 pt-4 text-[10px] font-semibold text-slate-500 dark:text-slate-400" />
-          </AreaChart>
+          </LineChart>
         </ChartContainer>
       </div>
     </motion.div>

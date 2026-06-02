@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { fetchSummary, fetchBranchStats } from "../services/statsService";
+import { fetchSummary, fetchBranchStats, fetchDailyStats } from "../services/statsService";
 import { fetchFeedbackStats } from "../services/feedbackService";
 import type { SummaryStats, BranchStat, FeedbackStats } from "../types";
 
@@ -12,6 +12,7 @@ export function useDashboardStats(options: { branch?: string; period?: string } 
   const [apiSummary, setApiSummary] = useState<SummaryStats | null>(null);
   const [branchStats, setBranchStats] = useState<BranchStat[]>([]);
   const [apiFeedbackStats, setApiFeedbackStats] = useState<FeedbackStats | null>(null);
+  const [dailyBranchData, setDailyBranchData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -19,11 +20,12 @@ export function useDashboardStats(options: { branch?: string; period?: string } 
     setIsLoading(true);
     setError(null);
     try {
-      const [summaryResult, branchResult, feedbackStatsResult] =
+      const [summaryResult, branchResult, feedbackStatsResult, dailyResult] =
         await Promise.allSettled([
           fetchSummary(period),
           fetchBranchStats("", period),
           fetchFeedbackStats(branch, period),
+          fetchDailyStats(period),
         ]);
 
       if (summaryResult.status === "fulfilled") {
@@ -42,6 +44,12 @@ export function useDashboardStats(options: { branch?: string; period?: string } 
         setApiFeedbackStats(feedbackStatsResult.value);
       } else {
         console.error("fetchFeedbackStats failed:", feedbackStatsResult.reason);
+      }
+
+      if (dailyResult.status === "fulfilled") {
+        setDailyBranchData(dailyResult.value || []);
+      } else {
+        console.error("fetchDailyStats failed:", dailyResult.reason);
       }
 
       if (
@@ -114,6 +122,7 @@ export function useDashboardStats(options: { branch?: string; period?: string } 
   return {
     summaryStats,
     branchStats,
+    dailyBranchData,
     branches,
     isLoading,
     error,

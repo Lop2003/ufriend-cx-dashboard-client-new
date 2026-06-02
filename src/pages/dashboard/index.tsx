@@ -11,7 +11,7 @@ export default function DashboardPage() {
   const [selectedBranch, setSelectedBranch] = useState('');
   const [selectedPeriod, setSelectedPeriod] = useState('');
 
-  const { summaryStats, branchStats, isLoading } = useDashboardStats({ branch: selectedBranch, period: selectedPeriod }) as any;
+  const { summaryStats, branchStats, dailyBranchData, isLoading } = useDashboardStats({ branch: selectedBranch, period: selectedPeriod }) as any;
 
   const branchesList = useMemo(() => {
     if (!branchStats || !branchStats.length) return [];
@@ -83,9 +83,12 @@ export default function DashboardPage() {
         ) : (
           <DashboardCharts
             branchStats={branchStats}
+            dailyBranchData={dailyBranchData}
             summaryStats={summaryStats}
             selectedBranch={selectedBranch}
             setSelectedBranch={setSelectedBranch}
+            selectedPeriod={selectedPeriod}
+            setSelectedPeriod={setSelectedPeriod}
           />
         )}
       </DashboardSection>

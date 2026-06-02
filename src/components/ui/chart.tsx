@@ -96,13 +96,13 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
             ([theme, prefix]) => `
 ${prefix} [data-chart=${id}] {
 ${colorConfig
-  .map(([key, itemConfig]) => {
-    const color =
-      itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ??
-      itemConfig.color
-    return color ? `  --color-${key}: ${color};` : null
-  })
-  .join("\n")}
+                .map(([key, itemConfig]) => {
+                  const color =
+                    itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ??
+                    itemConfig.color
+                  return color ? `  --color-${key}: ${color};` : null
+                })
+                .join("\n")}
 }
 `
           )
@@ -200,7 +200,13 @@ function ChartTooltipContent({
           .map((item, index) => {
             const key = `${nameKey ?? item.name ?? item.dataKey ?? "value"}`
             const itemConfig = getPayloadConfigFromPayload(config, item, key)
-            const indicatorColor = color ?? item.payload?.fill ?? item.color
+            const payloadFill = item.payload?.fill
+            const indicatorColor =
+              color ??
+              (typeof payloadFill === "string" && payloadFill.startsWith("url(")
+                ? item.color
+                : payloadFill) ??
+              item.color
 
             return (
               <div
@@ -220,10 +226,10 @@ function ChartTooltipContent({
                       !hideIndicator && (
                         <div
                           className={cn(
-                            "shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg)",
+                            "shrink-0 border border-[var(--color-border)] bg-[var(--color-bg)]",
                             {
-                              "h-2.5 w-2.5": indicator === "dot",
-                              "w-1": indicator === "line",
+                              "h-2.5 w-2.5 rounded-full": indicator === "dot",
+                              "w-1 rounded-[2px]": indicator === "line",
                               "w-0 border-[1.5px] border-dashed bg-transparent":
                                 indicator === "dashed",
                               "my-0.5": nestLabel && indicator === "dashed",
@@ -336,8 +342,8 @@ function getPayloadConfigFromPayload(
 
   const payloadPayload =
     "payload" in payload &&
-    typeof payload.payload === "object" &&
-    payload.payload !== null
+      typeof payload.payload === "object" &&
+      payload.payload !== null
       ? payload.payload
       : undefined
 

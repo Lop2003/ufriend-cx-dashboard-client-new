@@ -11,6 +11,8 @@ import {
   type ChartConfig,
 } from '@/components/ui/chart';
 import { DashboardChartArea } from './DashboardChartArea';
+import { DashboardChartBar } from './DashboardChartBar';
+import { DashboardChartLine } from './DashboardChartLine';
 
 interface BranchStat {
   branch: string;
@@ -26,16 +28,22 @@ interface SummaryStats {
 
 interface DashboardChartsProps {
   branchStats: BranchStat[];
+  dailyBranchData?: any[];
   summaryStats: SummaryStats;
   selectedBranch: string;
   setSelectedBranch: (val: string) => void;
+  selectedPeriod?: string;
+  setSelectedPeriod?: (val: string) => void;
 }
 
 export default function DashboardCharts({
   branchStats = [],
+  dailyBranchData = [],
   summaryStats = { positiveCount: 0, neutralCount: 0, negativeCount: 0, weeklyCSAT: [4.0, 4.0, 4.0, 4.0] },
   selectedBranch = '',
   setSelectedBranch = () => {},
+  selectedPeriod = '',
+  setSelectedPeriod = () => {},
 }: DashboardChartsProps) {
 
   // 2. Pie chart: sentiment proportion — ChartConfig for shadcn
@@ -120,8 +128,35 @@ export default function DashboardCharts({
       <div className="w-full">
         <DashboardChartArea
           branchStats={branchStats}
+          dailyBranchData={dailyBranchData}
           selectedBranch={selectedBranch}
           setSelectedBranch={setSelectedBranch}
+          selectedPeriod={selectedPeriod}
+          setSelectedPeriod={setSelectedPeriod}
+        />
+      </div>
+
+      {/* ── 1.5. Bar Chart: สัดส่วนสะสมแบบแท่ง (Stacked Bar Chart) ── */}
+      <div className="w-full">
+        <DashboardChartBar
+          branchStats={branchStats}
+          dailyBranchData={dailyBranchData}
+          selectedBranch={selectedBranch}
+          setSelectedBranch={setSelectedBranch}
+          selectedPeriod={selectedPeriod}
+          setSelectedPeriod={setSelectedPeriod}
+        />
+      </div>
+
+      {/* ── 1.7. Line Chart: แนวโน้มเปรียบเทียบแบบรายสาขา (Multiple Line Chart) ── */}
+      <div className="w-full">
+        <DashboardChartLine
+          branchStats={branchStats}
+          dailyBranchData={dailyBranchData}
+          selectedBranch={selectedBranch}
+          setSelectedBranch={setSelectedBranch}
+          selectedPeriod={selectedPeriod}
+          setSelectedPeriod={setSelectedPeriod}
         />
       </div>
 
