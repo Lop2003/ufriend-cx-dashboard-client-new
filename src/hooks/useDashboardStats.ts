@@ -6,8 +6,8 @@ import type { SummaryStats, BranchStat, FeedbackStats } from "../types";
 /**
  * useDashboardStats — fetch summary + branch stats + feedback stats สำหรับ dashboard
  */
-export function useDashboardStats(options: { branch?: string } = {}) {
-  const { branch = "" } = options;
+export function useDashboardStats(options: { branch?: string; period?: string } = {}) {
+  const { branch = "", period = "" } = options;
 
   const [apiSummary, setApiSummary] = useState<SummaryStats | null>(null);
   const [branchStats, setBranchStats] = useState<BranchStat[]>([]);
@@ -21,9 +21,9 @@ export function useDashboardStats(options: { branch?: string } = {}) {
     try {
       const [summaryResult, branchResult, feedbackStatsResult] =
         await Promise.allSettled([
-          fetchSummary(),
-          fetchBranchStats(),
-          fetchFeedbackStats(branch),
+          fetchSummary(period),
+          fetchBranchStats("", period),
+          fetchFeedbackStats(branch, period),
         ]);
 
       if (summaryResult.status === "fulfilled") {
@@ -56,7 +56,7 @@ export function useDashboardStats(options: { branch?: string } = {}) {
     } finally {
       setIsLoading(false);
     }
-  }, [branch]);
+  }, [branch, period]);
 
   useEffect(() => {
     loadData();

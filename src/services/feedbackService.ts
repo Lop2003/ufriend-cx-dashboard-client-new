@@ -18,10 +18,11 @@ export async function fetchFeedbacks(params: FetchFeedbacksParams = {}): Promise
 /**
  * READ — ดึงข้อมูลสถิติ feedbacks สำหรับวาดกราฟ (avg_rating, sentiments, weekly_csat)
  */
-export async function fetchFeedbackStats(branch: string): Promise<FeedbackStats> {
-  const url = branch
-    ? `/api/feedbacks/stats?branch=${encodeURIComponent(branch)}`
-    : '/api/feedbacks/stats';
-  return request<FeedbackStats>(url);
+export async function fetchFeedbackStats(branch: string, period?: string): Promise<FeedbackStats> {
+  const params = new URLSearchParams();
+  if (branch) params.append('branch', branch);
+  if (period) params.append('period', period);
+  const qs = params.toString();
+  return request<FeedbackStats>(`/api/feedbacks/stats${qs ? `?${qs}` : ''}`);
 }
 

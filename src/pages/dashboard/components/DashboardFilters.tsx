@@ -1,4 +1,4 @@
-import { Filter, Loader2 } from 'lucide-react';
+import { Filter, Loader2, Calendar } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -10,6 +10,8 @@ import {
 interface DashboardFiltersProps {
   selectedBranch: string;
   setSelectedBranch: (val: string) => void;
+  selectedPeriod: string;
+  setSelectedPeriod: (val: string) => void;
   branches: string[];
   isLoading?: boolean;
 }
@@ -17,6 +19,8 @@ interface DashboardFiltersProps {
 export default function DashboardFilters({
   selectedBranch,
   setSelectedBranch,
+  selectedPeriod,
+  setSelectedPeriod,
   branches = [],
   isLoading = false,
 }: DashboardFiltersProps) {
@@ -31,7 +35,7 @@ export default function DashboardFilters({
           )}
         </div>
         <span className="text-[12px] font-extrabold text-slate-500 dark:text-slate-400 tracking-wide">
-          เลือกวิเคราะห์รายพื้นที่สาขา:
+          ตัวกรองแดชบอร์ด:
         </span>
       </div>
 
@@ -58,6 +62,43 @@ export default function DashboardFilters({
                 สาขา: {br}
               </SelectItem>
             ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Period Select */}
+      <div className="flex items-center gap-3">
+        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-50 dark:bg-indigo-950/50 text-indigo-500 dark:text-indigo-400">
+          <Calendar className="h-3.5 w-3.5" />
+        </div>
+        <span className="text-[12px] font-extrabold text-slate-500 dark:text-slate-400 tracking-wide">
+          ช่วงเวลา:
+        </span>
+      </div>
+
+      <div className="w-full sm:w-[200px]">
+        <Select
+          disabled={isLoading}
+          value={selectedPeriod || "ALL_TIME"}
+          onValueChange={(val) => setSelectedPeriod(val === "ALL_TIME" ? "" : val)}
+        >
+          <SelectTrigger className={`h-9 w-full rounded-xl text-[12px] font-bold transition-all duration-300 ${
+            selectedPeriod 
+              ? 'border-indigo-400 dark:border-indigo-500 bg-indigo-50/45 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 shadow-[0_0_15px_rgba(99,102,241,0.12),0_0_0_2px_rgba(99,102,241,0.05)]' 
+              : 'border-slate-200/80 dark:border-white/10 bg-white/70 dark:bg-white/5 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-white/20'
+          }`}>
+            <SelectValue placeholder="เลือกช่วงเวลา" />
+          </SelectTrigger>
+          <SelectContent className="rounded-xl border-slate-200/80 dark:border-white/10">
+            <SelectItem value="ALL_TIME" className="text-[12px] font-bold text-slate-500 dark:text-slate-400">
+              ทั้งหมด (All Time)
+            </SelectItem>
+            <SelectItem value="7d" className="text-[12px] font-semibold text-slate-700 dark:text-slate-300">
+              7 วันล่าสุด (Last 7 Days)
+            </SelectItem>
+            <SelectItem value="1m" className="text-[12px] font-semibold text-slate-700 dark:text-slate-300">
+              1 เดือนล่าสุด (Last 1 Month)
+            </SelectItem>
           </SelectContent>
         </Select>
       </div>

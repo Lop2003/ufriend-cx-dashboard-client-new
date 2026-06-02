@@ -139,7 +139,7 @@ export function DashboardChartArea({
         >
           <AreaChart
             data={chartData}
-            margin={{ top: 10, right: 10, left: -22, bottom: 0 }}
+            margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
           >
             <defs>
               {branchKeys.map((branch) => {
@@ -182,7 +182,7 @@ export function DashboardChartArea({
               content={
                 <ChartTooltipContent
                   indicator="dot"
-                  className="bg-slate-900/95 text-slate-100 border-none shadow-xl rounded-xl"
+                  className="shadow-xl rounded-xl border border-slate-200/50 dark:border-white/10"
                 />
               }
             />

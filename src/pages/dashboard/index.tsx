@@ -9,8 +9,9 @@ import { FilterSkeleton, KPICardsSkeleton, ChartsSkeleton } from './components/D
 
 export default function DashboardPage() {
   const [selectedBranch, setSelectedBranch] = useState('');
+  const [selectedPeriod, setSelectedPeriod] = useState('');
 
-  const { summaryStats, branchStats, isLoading } = useDashboardStats({ branch: selectedBranch }) as any;
+  const { summaryStats, branchStats, isLoading } = useDashboardStats({ branch: selectedBranch, period: selectedPeriod }) as any;
 
   const branchesList = useMemo(() => {
     if (!branchStats || !branchStats.length) return [];
@@ -26,7 +27,7 @@ export default function DashboardPage() {
       {/* Filters */}
       <DashboardSection
         icon={<SlidersHorizontal className="h-3.5 w-3.5 text-slate-400" />}
-        label="ตัวกรองเลือกสาขาแดชบอร์ด (Branch Filter)"
+        label="ตัวกรองแดชบอร์ด (Dashboard Filters)"
       >
         {isInitialLoad ? (
           <FilterSkeleton />
@@ -34,6 +35,8 @@ export default function DashboardPage() {
           <DashboardFilters
             selectedBranch={selectedBranch}
             setSelectedBranch={setSelectedBranch}
+            selectedPeriod={selectedPeriod}
+            setSelectedPeriod={setSelectedPeriod}
             branches={branchesList}
             isLoading={isLoading}
           />
@@ -45,10 +48,19 @@ export default function DashboardPage() {
         icon={<BarChart3 className="h-3.5 w-3.5 text-slate-400" />}
         label="ดัชนีชี้วัดหลัก (KPI & Metrics)"
         rightSlot={
-          selectedBranch && !isLoading && (
-            <span className="inline-flex items-center rounded-full bg-blue-50 dark:bg-blue-900/30 border border-blue-100 dark:border-blue-800 px-3 py-1 text-[10px] font-extrabold text-[#0051bb] dark:text-blue-300 tracking-wide">
-              ฟิลเตอร์สาขา: {selectedBranch}
-            </span>
+          !isLoading && (selectedBranch || selectedPeriod) && (
+            <div className="flex items-center gap-2">
+              {selectedBranch && (
+                <span className="inline-flex items-center rounded-full bg-blue-50 dark:bg-blue-900/30 border border-blue-100 dark:border-blue-800 px-3 py-1 text-[10px] font-extrabold text-[#0051bb] dark:text-blue-300 tracking-wide">
+                  สาขา: {selectedBranch}
+                </span>
+              )}
+              {selectedPeriod && (
+                <span className="inline-flex items-center rounded-full bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 px-3 py-1 text-[10px] font-extrabold text-indigo-600 dark:text-indigo-300 tracking-wide">
+                  {selectedPeriod === '7d' ? '7 วันล่าสุด' : '1 เดือนล่าสุด'}
+                </span>
+              )}
+            </div>
           )
         }
       >
