@@ -231,3 +231,17 @@ html, body, main, header, nav, aside,
     transform: translateY(0);
   }
 }
+
+@keyframes loading-bar {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+.animate-loading-bar {
+  width: 50%;
+  animation: loading-bar 1.5s infinite ease-in-out;
+}

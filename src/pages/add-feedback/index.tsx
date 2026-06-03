@@ -4,12 +4,14 @@ import { useCustomers } from '../../hooks/useCustomers';
 import { useAddFeedback } from '../../hooks/useAddFeedback';
 import { PATHS } from '../../routes/paths';
 import FeedbackForm from './components/FeedbackForm';
+import CustomerDetailModal from '../customers/components/CustomerDetailModal';
 
 export default function AddFeedbackPage() {
   const navigate = useNavigate();
   
   const [searchVal, setSearchVal] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [showModalId, setShowModalId] = useState('');
 
   // Debounce การค้นหาฝั่งเซิร์ฟเวอร์
   useEffect(() => {
@@ -36,29 +38,41 @@ export default function AddFeedbackPage() {
     isSubmitting,
     handleSubmit,
     selectedCust,
-  } = useAddFeedback({ customers });
+  } = useAddFeedback({
+    customers,
+    onSuccess: (id) => setShowModalId(id),
+  });
 
   return (
-    <FeedbackForm
-      customers={customers}
-      customerId={customerId}
-      setCustomerId={setCustomerId}
-      rating={rating}
-      setRating={setRating}
-      hoverRating={hoverRating}
-      setHoverRating={setHoverRating}
-      comment={comment}
-      setComment={setComment}
-      category={category}
-      setCategory={setCategory}
-      error={error ?? ''}
-      setError={setError}
-      isSubmitting={isSubmitting}
-      handleSubmit={handleSubmit}
-      selectedCust={selectedCust}
-      onSearchChange={setSearchVal}
-      searchLoading={searchLoading}
-      onCancel={() => navigate(PATHS.CUSTOMERS)}
-    />
+    <>
+      <FeedbackForm
+        customers={customers}
+        customerId={customerId}
+        setCustomerId={setCustomerId}
+        rating={rating}
+        setRating={setRating}
+        hoverRating={hoverRating}
+        setHoverRating={setHoverRating}
+        comment={comment}
+        setComment={setComment}
+        category={category}
+        setCategory={setCategory}
+        error={error ?? ''}
+        setError={setError}
+        isSubmitting={isSubmitting}
+        handleSubmit={handleSubmit}
+        selectedCust={selectedCust}
+        onSearchChange={setSearchVal}
+        searchLoading={searchLoading}
+        onCancel={() => navigate(PATHS.CUSTOMERS)}
+      />
+      {!!showModalId && (
+        <CustomerDetailModal
+          selectedCustomerId={showModalId}
+          isOpen={!!showModalId}
+          onClose={() => setShowModalId('')}
+        />
+      )}
+    </>
   );
 }

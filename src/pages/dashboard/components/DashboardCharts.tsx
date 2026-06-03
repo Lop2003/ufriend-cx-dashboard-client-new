@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import type React from "react";
 import { motion } from "framer-motion";
-import { Smile, TrendingUp } from "lucide-react";
+import { Smile, Star } from "lucide-react";
 import {
   XAxis,
   YAxis,
@@ -447,7 +447,7 @@ export default function DashboardCharts({
           <CardHeader
             iconBg="bg-amber-50 dark:bg-amber-950/50"
             iconColor="text-amber-500 dark:text-amber-400"
-            icon={<TrendingUp className="h-4.5 w-4.5" />}
+            icon={<Star className="h-4.5 w-4.5" />}
             title="แนวโน้มคะแนน CSAT"
             subtitle={csatSubtitle}
           />

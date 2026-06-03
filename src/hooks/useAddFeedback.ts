@@ -1,14 +1,12 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { createFeedback } from '../services/feedbackMutations';
 import { fetchCustomerDetail } from '../services/customerService';
 import { useToast } from '../components/Toast';
-import { PATHS } from '../routes/paths';
 import type { Customer, UseAddFormOptions } from '../types';
 
-export function useAddFeedback(options: UseAddFormOptions = {}) {
-  const { customers = [] } = options;
-  const navigate = useNavigate();
+export function useAddFeedback(options: UseAddFormOptions & { onSuccess?: (id: string) => void } = {}) {
+  const { customers = [], onSuccess } = options;
   const location = useLocation();
   const { showToast } = useToast();
 
@@ -69,9 +67,10 @@ export function useAddFeedback(options: UseAddFormOptions = {}) {
       });
       showToast('success', 'บันทึกคำติชมเรียบร้อยแล้ว');
       setError('');
-
-      // Navigate to customers page with preselected customer to show detail modal
-      navigate(`${PATHS.CUSTOMERS}?id=${customerId}`);
+      setComment('');
+      if (onSuccess) {
+        onSuccess(customerId);
+      }
     } catch (err: any) {
       showToast('error', `บันทึกไม่สำเร็จ: ${err?.message ?? 'Unknown error'}`);
     } finally {
