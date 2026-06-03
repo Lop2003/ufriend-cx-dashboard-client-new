@@ -11,11 +11,11 @@ export default function DashboardPage() {
   const [selectedBranch, setSelectedBranch] = useState('');
   const [selectedPeriod, setSelectedPeriod] = useState('');
 
-  const { summaryStats, branchStats, dailyBranchData, isLoading } = useDashboardStats({ branch: selectedBranch, period: selectedPeriod }) as any;
+  const { summaryStats, branchStats, dailyBranchData, isLoading } = useDashboardStats({ branch: selectedBranch, period: selectedPeriod });
 
   const branchesList = useMemo(() => {
     if (!branchStats || !branchStats.length) return [];
-    return branchStats.map((stat: any) => stat.branch).filter(Boolean);
+    return branchStats.map((stat) => stat.branch).filter(Boolean);
   }, [branchStats]);
 
   // Check if it's the very first load (no data fetched yet)

@@ -123,3 +123,24 @@ export interface UseCustomersOptions {
 export interface UseAddFormOptions {
   customers?: Customer[];
 }
+
+export interface ComputedSummaryStats {
+  totalCustomers: number;
+  avgRating: string;
+  overdueCount: number;
+  satisfactionRate: string;
+  positiveCount: number;
+  neutralCount: number;
+  negativeCount: number;
+  weeklyCSAT: number[];
+}
+
+export interface DashboardStatsResult {
+  summaryStats: ComputedSummaryStats;
+  branchStats: BranchStat[];
+  dailyBranchData: Array<{ date: string; [key: string]: string | number }>;
+  branches: string[];
+  isLoading: boolean;
+  error: string | null;
+  refetch: () => Promise<void>;
+}

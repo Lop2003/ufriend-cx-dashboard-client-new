@@ -1,18 +1,18 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { fetchSummary, fetchBranchStats, fetchDailyStats } from "../services/statsService";
 import { fetchFeedbackStats } from "../services/feedbackService";
-import type { SummaryStats, BranchStat, FeedbackStats } from "../types";
+import type { SummaryStats, BranchStat, FeedbackStats, DashboardStatsResult } from "../types";
 
 /**
  * useDashboardStats — fetch summary + branch stats + feedback stats สำหรับ dashboard
  */
-export function useDashboardStats(options: { branch?: string; period?: string } = {}) {
+export function useDashboardStats(options: { branch?: string; period?: string } = {}): DashboardStatsResult {
   const { branch = "", period = "" } = options;
 
   const [apiSummary, setApiSummary] = useState<SummaryStats | null>(null);
   const [branchStats, setBranchStats] = useState<BranchStat[]>([]);
   const [apiFeedbackStats, setApiFeedbackStats] = useState<FeedbackStats | null>(null);
-  const [dailyBranchData, setDailyBranchData] = useState<any[]>([]);
+  const [dailyBranchData, setDailyBranchData] = useState<Array<{ date: string; [key: string]: string | number }>>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
